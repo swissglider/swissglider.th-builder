@@ -23,7 +23,7 @@ const prompt = async (message) => {
     });
 }
 
-const checkResponseError = (error, stdout, stderr) => {
+const checkResponseError = ({error, stdout, stderr}, devNull = false) => {
     if (error) {
         if (stdout) successMSG(stdout);
         if (stderr) errMSG(stderr);
@@ -31,8 +31,10 @@ const checkResponseError = (error, stdout, stderr) => {
         exitProg();
     }
     if (stderr) {
-        if (stdout) successMSG(stdout);
-        if (stderr) errMSG(stderr);
+        if(devNull !== true){
+            if (stdout) successMSG(stdout);
+            if (stderr) errMSG(stderr);
+        }
     }
     return stdout;
 }
@@ -42,9 +44,9 @@ const checkResponseError = (error, stdout, stderr) => {
  * on error it exit the Programm
  * on stderr it prints it out
  */
-const execAsync = async (comman, workingDir = './') => {
+const execAsync = async (comman, workingDir = './', devNull = false) => {
     return new Promise((resolve, reject) => {
-        exec(comman, { cwd: workingDir }, (error, stdout, stderr) => resolve(checkResponseError(error, stdout, stderr)))
+        exec(comman, { cwd: workingDir }, (error, stdout, stderr) => resolve(checkResponseError({error, stdout, stderr}, devNull)))
     })
 }
 

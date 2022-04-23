@@ -242,7 +242,7 @@ const createGitHubRepository = async () => {
     waitMSG('creating github repository ...');
     await execAsync(`git add . && git commit -m "initial commit"`, cdw);
     await execAsync(`gh auth status`, cdw, {devNull:true})
-    await execAsync(`gh repo create ${inputParams.packageName} --public --source=. --remote=origin --description=${inputParams.description} --push`, cdw)
+    await execAsync(`gh repo create ${inputParams.packageName} --public --source=. --remote=origin --description="${inputParams.description}" --push`, cdw)
     rewriteLastLine(' ✔  github repository created and pushed');
 }
 
@@ -264,7 +264,7 @@ const main = async () => {
     successMSG("====================================================================")
     successMSG("  Welcome and thanks for using the Swissglider - TheHome - Builder")
     successMSG("====================================================================")
-    successMSG(`Version ${process.env.package_version}`);
+    successMSG(``);
     await checkIfGithubAuthenticated();
     await grapInputParameters();
     createProjectFolder();

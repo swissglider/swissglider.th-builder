@@ -161,7 +161,7 @@ const setupGitReactTypescript = async () => {
     const tmpF = '__temp__';
     await execAsync(`mkdir ${tmpF}`, cdw);
     await execAsync(`git clone --depth 1 --filter=blob:none --no-checkout https://github.com/swissglider/swissglider.th-builder`, `${cdw}/${tmpF}`);
-    await execAsync(`git checkout --quiet main -- templates`, `${cdw}/${tmpF}/swissglider.th-builder`);
+    await execAsync(`git checkout --quiet main -- templates`, `${cdw}/${tmpF}/swissglider.th-builder`, true);
     await execAsync(` cp -rT ./${tmpF}/swissglider.th-builder/templates/toCopy .`, cdw);
     await execAsync(` rm -rf ./${tmpF}`, cdw);
 
@@ -171,7 +171,7 @@ const setupGitReactTypescript = async () => {
     await execAsync(` rm -rf ./src/stories`, cdw, true);
 
     waitMSG('installing semantic-release ...');
-    await execAsync(`npm @semantic-release/changelog @semantic-release/commit-analyzer @semantic-release/git @semantic-release/release-notes-generator --save-dev`, cdw);
+    await execAsync(`npm  install @semantic-release/changelog @semantic-release/commit-analyzer @semantic-release/git @semantic-release/release-notes-generator --save-dev`, cdw);
 }
 
 const adaptPackageJSON = async () => {

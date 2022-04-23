@@ -222,7 +222,8 @@ const adaptPackageJSON = async () => {
           "main"
         ]
       }
-    fs.writeFileSync(`./${inputParams.projectFolder}/package.json`, JSON.stringify(newPackageJSON, null, 2))
+    fs.writeFileSync(`./${inputParams.projectFolder}/package.json`, JSON.stringify(newPackageJSON, null, 2));
+    rewriteLastLine(' ✔  npm install successfull');
 }
 
 const reInstallNPM = async () => {
@@ -232,7 +233,7 @@ const reInstallNPM = async () => {
     await execAsync(`rm -rf ./node_modules`, cdw, {devNull:true});
     await execAsync(`rm -rf ./package-lock.json`, cdw, {devNull:true});
     await execAsync(`npm install`, cdw, {devNull:true});
-    rewriteLastLine(' ✔  npm install successfull');
+    rewriteLastLine(' ✔  package.json adapted');
 }
 
 const createGitHubRepository = async () => {
@@ -241,7 +242,7 @@ const createGitHubRepository = async () => {
     waitMSG('creating github repository ...');
     await execAsync(`git add . && git commit -m "initial commit"`, cdw);
     await execAsync(`gh auth status`, cdw, {devNull:true})
-    execAsync(`gh repo create ${inputParams.packageName} --public --source=. --remote=origin --description=${inputParams.description} --push`, cdw)
+    await execAsync(`gh repo create ${inputParams.packageName} --public --source=. --remote=origin --description=${inputParams.description} --push`, cdw)
     rewriteLastLine(' ✔  github repository created and pushed');
 }
 

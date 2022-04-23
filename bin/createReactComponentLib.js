@@ -146,7 +146,7 @@ const setupGitReactTypescript = async () => {
     const gitResp = await execAsync(`git init --quiet --initial-branch=${inputParams.branch}`, cdw);
 
     waitMSG('installing React ...');
-    const reactResp = await execAsync(`npm install react typescript @types/react --save-dev`, cdw);
+    const reactResp = await execAsync(`npm install react react-dom typescript @types/react --save-dev`, cdw);
 
     waitMSG('installing Rollup ...');
     const rollupResp = await execAsync(`npm install rollup @rollup/plugin-node-resolve @rollup/plugin-typescript @rollup/plugin-commonjs --save-dev`, cdw);
@@ -158,9 +158,24 @@ const setupGitReactTypescript = async () => {
     await execAsync(`git clone --depth 1 --filter=blob:none --no-checkout https://github.com/swissglider/swissglider.th-builder`, `${cdw}/${tmpF}`);
     await execAsync(`git checkout --quiet main -- templates`, `${cdw}/${tmpF}/swissglider.th-builder`);
     await execAsync(` cp -rT ./${tmpF}/swissglider.th-builder/templates/toCopy .`, cdw);
-    // await execAsync(` rm -rf ./${tmpF}`, cdw);
+    await execAsync(` rm -rf ./${tmpF}`, cdw);
 
-    waitMSG('installing ');
+    waitMSG('installing storyboo');
+    await execAsync(`npx sb init --builder webpack5`, cdw);
+}
+
+const adaptPackageJSON = async () => {
+    const rawPackageJSON = fs.readFileSync(`./${inputParams.projectFolder}/package.json`);
+    const newPackageJSON = JSON.parse(rawPackageJSON);
+    const reactVersion = newPackageJSON.devDependencies.react;
+    const reactDOMVersion = newPackageJSON.devDependencies['react-dom'];
+    delete newPackageJSON.devDependencies.react;
+    delete newPackageJSON.devDependencies['react-dom'];
+    newPackageJSON.peerDependencies = {
+        react: reactVersion,
+        'react-dom': reactDOMVersion
+    }
+    fs.writeFileSync(`./${inputParams.projectFolder}/package.json`, JSON.stringify(newPackageJSON, null, 2))
 }
 
 const main = async () => {
@@ -175,6 +190,7 @@ const main = async () => {
     createProjectFolder();
     createPackageJSON();
     await setupGitReactTypescript();
+    await adaptPackageJSON();
     process.exit();
 }
 

@@ -23,8 +23,8 @@ const prompt = async (message) => {
     });
 }
 
-const checkResponseError = ({error, stdout, stderr}, {devNull = false, getSTDERR = false}) => {
-    if (error) {
+const checkResponseError = ({error, stdout, stderr}, {devNull = false, getSTDERR = false, ignoreError=false}) => {
+    if (error && !ignoreError) {
         if (stdout) successMSG(stdout);
         if (stderr) errMSG(stderr);
         errMSG(error);
@@ -234,9 +234,9 @@ const createGitHubRepository = async () => {
 const checkIfGithubAuthenticated = async () => {
 
     waitMSG('checking if github authenticated ...');
-    const authResponse = await execAsync(`gh auth status`, '.', {devNull:true, getSTDERR:true});
+    const authResponse = await execAsync(`gh auth status`, '.', {devNull:true, getSTDERR:true, ignoreError:true});
+    console.log('Resp:', authResponse)
     if(!authResponse.includes('Logged in to')){
-        console.log('hallo')
         errMSG('you have to login to github first, use: gh auth login');
         exitProg();
     }

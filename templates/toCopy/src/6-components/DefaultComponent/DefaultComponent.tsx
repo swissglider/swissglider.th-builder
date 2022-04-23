@@ -9,7 +9,7 @@ const DefaultComponent: FC<any> = () => {
     }, []);
     return (
         <div>
-            <button>Hallo Guido</button>;
+            <button>Hallo Guido</button>
         </div>
     );
 };

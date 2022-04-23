@@ -143,17 +143,17 @@ const setupGitReactTypescript = async () => {
     const cdw = `./${inputParams.projectFolder}`;
 
     waitMSG('installing Git ...');
-    const gitResp = await execAsync(`git init --quiet --initial-branch=${inputParams.branch}`, cdw);
+    await execAsync(`git init --quiet --initial-branch=${inputParams.branch}`, cdw);
 
     waitMSG('installing React ...');
-    const reactResp = await execAsync(`npm install react react-dom typescript @types/react --save-dev`, cdw);
+    await execAsync(`npm install react react-dom typescript @types/react --save-dev`, cdw);
 
     waitMSG('installing Webpack ...');
     await execAsync(`npm install webpack --save-dev`, cdw);
 
     waitMSG('installing Rollup ...');
-    const rollupResp = await execAsync(`npm install rollup @rollup/plugin-node-resolve @rollup/plugin-typescript @rollup/plugin-commonjs --save-dev`, cdw);
-    const rollupPlugResp = await execAsync(`npm install rollup-plugin-dts @rollup/plugin-json rollup-plugin-postcss rollup-plugin-peer-deps-external rollup-plugin-terser --save-dev`, cdw);
+    await execAsync(`npm install rollup @rollup/plugin-node-resolve @rollup/plugin-typescript @rollup/plugin-commonjs --save-dev`, cdw);
+    await execAsync(`npm install rollup-plugin-dts @rollup/plugin-json rollup-plugin-postcss rollup-plugin-peer-deps-external rollup-plugin-terser --save-dev`, cdw);
 
     waitMSG('copy config files from Github ...');
     const tmpF = '__temp__';
@@ -167,6 +167,9 @@ const setupGitReactTypescript = async () => {
     await execAsync(`npx sb init --builder webpack5`, cdw);
     await execAsync(`npx sb upgrade --prerelease`, cdw);
     await execAsync(` rm -rf ./src/stories`, cdw);
+
+    waitMSG('installing semantic-release ...');
+    await execAsync(`npm @semantic-release/changelog @semantic-release/commit-analyzer @semantic-release/git @semantic-release/release-notes-generator --save-dev`, cdw);
 }
 
 const adaptPackageJSON = async () => {
@@ -181,6 +184,23 @@ const adaptPackageJSON = async () => {
         react: reactVersion,
         'react-dom': reactDOMVersion
     }
+    newPackageJSON.release = {
+        "plugins": [
+          "@semantic-release/commit-analyzer",
+          "@semantic-release/release-notes-generator",
+          [
+            "@semantic-release/npm",
+            {
+              "npmPublish": true
+            }
+          ],
+          "@semantic-release/changelog",
+          "@semantic-release/git"
+        ],
+        "branches": [
+          "main"
+        ]
+      }
     fs.writeFileSync(`./${inputParams.projectFolder}/package.json`, JSON.stringify(newPackageJSON, null, 2))
 }
 

@@ -150,17 +150,20 @@ const setupGitReactTypescript = async () => {
 
     waitMSG('installing Git ...');
     await execAsync(`git init --quiet --initial-branch=${inputParams.branch}`, cdw);
-    rewriteLastLine('✔ installed Git')
+    rewriteLastLine(' ✔  installed Git');
 
     waitMSG('installing React ...');
     await execAsync(`npm install react react-dom typescript @types/react --save-dev`, cdw);
+    rewriteLastLine(' ✔  installed React');
 
     waitMSG('installing Webpack ...');
     await execAsync(`npm install webpack --save-dev`, cdw);
+    rewriteLastLine(' ✔  installed Webpack');
 
     waitMSG('installing Rollup ...');
     await execAsync(`npm install rollup @rollup/plugin-node-resolve @rollup/plugin-typescript @rollup/plugin-commonjs --save-dev`, cdw);
     await execAsync(`npm install rollup-plugin-dts @rollup/plugin-json rollup-plugin-postcss rollup-plugin-peer-deps-external rollup-plugin-terser --save-dev`, cdw);
+    rewriteLastLine(' ✔  installed Rollup');
 
     waitMSG('copy config files from Github ...');
     const tmpF = '__temp__';
@@ -169,14 +172,17 @@ const setupGitReactTypescript = async () => {
     await execAsync(`git checkout --quiet main -- templates`, `${cdw}/${tmpF}/swissglider.th-builder`);
     await execAsync(` cp -rT ./${tmpF}/swissglider.th-builder/templates/toCopy .`, cdw);
     await execAsync(` rm -rf ./${tmpF}`, cdw);
+    rewriteLastLine(' ✔  copy config from Github');
 
     waitMSG('installing semantic-release ...');
     await execAsync(`npm  install @semantic-release/changelog @semantic-release/commit-analyzer @semantic-release/git @semantic-release/release-notes-generator --save-dev`, cdw, {devNull:true});
+    rewriteLastLine(' ✔  installed semantic-release');
 
     waitMSG('installing storybook ...');
     await execAsync(`npx sb init --builder webpack5`, cdw, {devNull:true});
     await execAsync(`npx sb upgrade --prerelease`, cdw, {devNull:true});
     await execAsync(` rm -rf ./src/stories`, cdw, {devNull:true});
+    rewriteLastLine(' ✔  installed storybook');
 }
 
 const adaptPackageJSON = async () => {
@@ -226,6 +232,7 @@ const reInstallNPM = async () => {
     await execAsync(`rm -rf ./node_modules`, cdw, {devNull:true});
     await execAsync(`rm -rf ./package-lock.json`, cdw, {devNull:true});
     await execAsync(`npm install`, cdw, {devNull:true});
+    rewriteLastLine(' ✔  npm install successfull');
 }
 
 const createGitHubRepository = async () => {
@@ -235,6 +242,7 @@ const createGitHubRepository = async () => {
     await execAsync(`git add . && git commit -m "initial commit"`, cdw);
     const authResponce = await execAsync(`gh auth status`, cdw)
     execAsync(`gh repo create ${inputParams.packageName} --public --source=. --remote=origin --description=${inputParams.description} --push`, cdw)
+    rewriteLastLine(' ✔  github repository created and pushed');
 }
 
 const checkIfGithubAuthenticated = async () => {
@@ -245,6 +253,7 @@ const checkIfGithubAuthenticated = async () => {
         errMSG('you have to login to github first, use: gh auth login');
         exitProg();
     }
+    rewriteLastLine(' ✔  github authentication ok');
 }
 
 const main = async () => {

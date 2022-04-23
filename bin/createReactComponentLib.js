@@ -12,6 +12,11 @@ const warnMSG = (msg => console.warn("\x1b[2m", "\x1b[30m", "\x1b[43m", msg, "\x
 // const errMSG = (msg => console.error("\x1b[5m", "\x1b[30m", "\x1b[41m", msg, "\x1b[0m"));
 const errMSG = (msg => console.error("\x1b[1m", "\x1b[31m", msg, "\x1b[0m"));
 const waitMSG = (msg => console.log("\x1b[1m", "\x1b[34m", ` --> ${msg}`, "\x1b[0m"));
+const rewriteLastLine = (msg, writeFunction = successMSG) => {
+    process.stdout.moveCursor(0, -1) // up one line
+    process.stdout.clearLine(1) // from cursor to end
+    writeFunction(msg);
+}
 
 const exitProg = () => process.exit(1);
 
@@ -145,6 +150,7 @@ const setupGitReactTypescript = async () => {
 
     waitMSG('installing Git ...');
     await execAsync(`git init --quiet --initial-branch=${inputParams.branch}`, cdw);
+    rewriteLastLine('✔ installed Git')
 
     waitMSG('installing React ...');
     await execAsync(`npm install react react-dom typescript @types/react --save-dev`, cdw);
@@ -256,6 +262,7 @@ const main = async () => {
     await setupGitReactTypescript();
     await adaptPackageJSON();
     await reInstallNPM();
+    await createGitHubRepository();
     process.exit();
 }
 

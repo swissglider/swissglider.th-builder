@@ -1,6 +1,6 @@
 {
   "name": "swissglider.th-builder",
-  "version": "1.10.0",
+  "version": "1.11.0",
   "description": "The Swissglider TheHome Builder is building the whole framework with React, TypeScript, Rollup, Storybook, NPM Package, GitHub",
   "main": "./bin/createReactComponentLib.js",
   "scripts": {

@@ -1,0 +1,43 @@
+{
+  "name": "swissglider.th-builder",
+  "version": "0.0.1",
+  "description": "The Swissglider TheHome Builder is building the whole framework with React, TypeScript, Rollup, Storybook, NPM Package, GitHub",
+  "main": "./bin/createReactComponentLib.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "swissglider",
+    "theHome",
+    "Builder"
+  ],
+  "devDependencies": {
+    "@semantic-release/changelog": "^6.0.1",
+    "@semantic-release/commit-analyzer": "^9.0.2",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/npm": "^9.0.1",
+    "@semantic-release/release-notes-generator": "^10.0.3"
+  },
+  "author": "Swissglider <npm@mailschweiz.com>",
+  "license": "MIT",
+  "bin": {
+    "swissglider.th-builder": "bin/createReactComponentLib.js"
+  },
+  "release": {
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      [
+        "@semantic-release/npm",
+        {
+          "npmPublish": true
+        }
+      ],
+      "@semantic-release/changelog",
+      "@semantic-release/git"
+    ],
+    "branches": [
+      "main"
+    ]
+  }
+}

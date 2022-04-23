@@ -1,0 +1,24 @@
+{
+    "name":null,
+    "version": "0.0.1",
+    "author": {
+        "name":null,
+        "email":null
+    },
+    "scripts": {
+        "test": "echo hallo",
+        "rollup": "rollup -c"
+    },
+    "license": "MIT",
+    "keywords": [
+        "swissglider",
+        "thehome",
+        "react"
+    ],
+    "main": "dist/cjs/index.js",
+    "module": "dist/esm/index.js",
+    "files": [
+        "dist"
+    ],
+    "types": "dist/index.d.ts"
+}

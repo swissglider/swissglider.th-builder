@@ -157,7 +157,7 @@ const setupGitReactTypescript = async () => {
     await execAsync(`mkdir ${tmpF}`, cdw);
     await execAsync(`git clone --depth 1 --filter=blob:none --no-checkout https://github.com/swissglider/swissglider.th-builder`, `${cdw}/${tmpF}`);
     await execAsync(`git checkout --quiet main -- templates`, `${cdw}/${tmpF}/swissglider.th-builder`);
-    await execAsync(` cp -a ./${tmpF}/swissglider.th-builder/templates/toCopy/* .`, cdw);
+    await execAsync(` cp -rT ./${tmpF}/swissglider.th-builder/templates/toCopy .`, cdw);
     // await execAsync(` rm -rf ./${tmpF}`, cdw);
 
     waitMSG('installing ');
@@ -175,7 +175,6 @@ const main = async () => {
     createProjectFolder();
     createPackageJSON();
     await setupGitReactTypescript();
-    console.log(packageJSON);
     process.exit();
 }
 

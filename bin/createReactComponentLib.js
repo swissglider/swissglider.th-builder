@@ -153,21 +153,22 @@ const setupGitReactTypescript = async () => {
     const rollupPlugResp = await execAsync(`npm install rollup-plugin-dts @rollup/plugin-json rollup-plugin-postcss rollup-plugin-peer-deps-external rollup-plugin-terser --save-dev`, cdw);
 
     waitMSG('copy config files from Github ...');
-    await execAsync(`mkdir temp`, cdw);
-    await execAsync(`git clone --depth 1 --filter=blob:none --no-checkout https://github.com/swissglider/swissglider.th-builder`, `${cdw}/temp`);
-    await execAsync(`git checkout --quiet main -- templates`, `${cdw}/temp/swissglider.th-builder`);
-    await execAsync(` cp -a ./temp/swissglider.th-builder/templates/toCopy/* .`, cdw);
-    await execAsync(` rm -rf ./temp .`, cdw);
-
-    // const tscResp = await execAsync(` cp -a ../templates/toCopy/. .`, cdw);
+    const tmpF = '__temp__';
+    await execAsync(`mkdir ${tmpF}`, cdw);
+    await execAsync(`git clone --depth 1 --filter=blob:none --no-checkout https://github.com/swissglider/swissglider.th-builder`, `${cdw}/${tmpF}`);
+    await execAsync(`git checkout --quiet main -- templates`, `${cdw}/${tmpF}/swissglider.th-builder`);
+    await execAsync(` cp -a ./${tmpF}/swissglider.th-builder/templates/toCopy/* .`, cdw);
+    await execAsync(` rm -rf ./${tmpF}`, cdw);
 }
 
 const main = async () => {
     // **************************************
     // Main Program
     // **************************************
+    successMSG("==================================================================")
+    successMSG("  Welcome and thanks for using the Swissglider - TheHome - Builder")
+    successMSG("==================================================================")
     successMSG(`Version ${process.env.package_version}`);
-    console.log(process)
     await grapInputParameters();
     createProjectFolder();
     createPackageJSON();

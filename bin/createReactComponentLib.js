@@ -9,7 +9,8 @@ var exec = require('child_process').exec;
 
 const successMSG = (msg => console.warn("\x1b[1m", "\x1b[32m", msg, "\x1b[0m"));
 const warnMSG = (msg => console.warn("\x1b[2m", "\x1b[30m", "\x1b[43m", msg, "\x1b[0m"));
-const errMSG = (msg => console.error("\x1b[5m", "\x1b[30m", "\x1b[41m", msg, "\x1b[0m"));
+// const errMSG = (msg => console.error("\x1b[5m", "\x1b[30m", "\x1b[41m", msg, "\x1b[0m"));
+const errMSG = (msg => console.error("\x1b[1m", "\x1b[31m", msg, "\x1b[0m"));
 const waitMSG = (msg => console.log("\x1b[1m", "\x1b[34m", ` --> ${msg}`, "\x1b[0m"));
 
 const exitProg = () => process.exit(1);
@@ -155,7 +156,7 @@ const setupGitReactTypescript = async () => {
     await execAsync(`mkdir temp`, cdw);
     await execAsync(`git clone --depth 1 --filter=blob:none --no-checkout https://github.com/swissglider/swissglider.th-builder`, `${cdw}/temp`);
     await execAsync(`git checkout main -- templates`, `${cdw}/temp/swissglider.th-builder`);
-    await execAsync(` cp -a ${cdw}/temp/swissglider.th-builder/templates/toCopy/. .`, cdw);
+    await execAsync(` cp -a ${cdw}/temp/swissglider.th-builder/templates/toCopy/* .`, cdw);
 
     // const tscResp = await execAsync(` cp -a ../templates/toCopy/. .`, cdw);
 }

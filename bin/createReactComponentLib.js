@@ -158,7 +158,7 @@ const setupGitReactTypescript = async () => {
     await execAsync(`git clone --depth 1 --filter=blob:none --no-checkout https://github.com/swissglider/swissglider.th-builder`, `${cdw}/${tmpF}`);
     await execAsync(`git checkout --quiet main -- templates`, `${cdw}/${tmpF}/swissglider.th-builder`);
     await execAsync(` cp -a ./${tmpF}/swissglider.th-builder/templates/toCopy/* .`, cdw);
-    await execAsync(` rm -rf ./${tmpF}`, cdw);
+    // await execAsync(` rm -rf ./${tmpF}`, cdw);
 
     waitMSG('installing ');
 }
@@ -167,9 +167,9 @@ const main = async () => {
     // **************************************
     // Main Program
     // **************************************
-    successMSG("===================================================================")
+    successMSG("====================================================================")
     successMSG("  Welcome and thanks for using the Swissglider - TheHome - Builder")
-    successMSG("===================================================================")
+    successMSG("====================================================================")
     successMSG(`Version ${process.env.package_version}`);
     await grapInputParameters();
     createProjectFolder();

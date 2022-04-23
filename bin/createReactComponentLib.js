@@ -233,8 +233,10 @@ const createGitHubRepository = async () => {
 const checkIfGithubAuthenticated = async () => {
 
     waitMSG('checking if github authenticated ...');
-    const authResponce = await execAsync(`gh auth status`)
-    if(!authResponce.includes('Logged in to')){
+    const authResponse = await execAsync(`gh auth status`);
+    console.log('Result', authResponse);
+    if(!authResponse.includes('Logged in to')){
+        console.log('hallo')
         errMSG('you have to login to github first, use: gh auth login');
         exitProg();
     }

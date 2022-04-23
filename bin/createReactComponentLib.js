@@ -165,7 +165,7 @@ const main = async () => {
     // **************************************
     // Main Program
     // **************************************
-    successMSG("Version 1.3");
+    successMSG(`Version ${process.env.npm_package_version}`);
     await grapInputParameters();
     createProjectFolder();
     createPackageJSON();

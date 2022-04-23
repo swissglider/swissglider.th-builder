@@ -32,6 +32,7 @@ const checkResponseError = ({error, stdout, stderr}, devNull = false) => {
     }
     if (stderr) {
         if(devNull !== true){
+            console.log(devNull);
             if (stdout) successMSG(stdout);
             if (stderr) errMSG(stderr);
         }
@@ -160,8 +161,8 @@ const setupGitReactTypescript = async () => {
     waitMSG('copy config files from Github ...');
     const tmpF = '__temp__';
     await execAsync(`mkdir ${tmpF}`, cdw);
-    await execAsync(`git clone --depth 1 --filter=blob:none --no-checkout https://github.com/swissglider/swissglider.th-builder`, `${cdw}/${tmpF}`);
-    await execAsync(`git checkout --quiet main -- templates`, `${cdw}/${tmpF}/swissglider.th-builder`, true);
+    await execAsync(`git clone --depth 1 --filter=blob:none --no-checkout https://github.com/swissglider/swissglider.th-builder`, `${cdw}/${tmpF}`, true);
+    await execAsync(`git checkout --quiet main -- templates`, `${cdw}/${tmpF}/swissglider.th-builder`);
     await execAsync(` cp -rT ./${tmpF}/swissglider.th-builder/templates/toCopy .`, cdw);
     await execAsync(` rm -rf ./${tmpF}`, cdw);
 
@@ -188,7 +189,15 @@ const adaptPackageJSON = async () => {
     }
     newPackageJSON.release = {
         "plugins": [
-          "@semantic-release/commit-analyzer",
+            ["@semantic-release/commit-analyzer", {
+                "preset": "angular",
+                "releaseRules": [
+                  {"type": "docs", "scope":"README", "release": "patch"},
+                  {"type": "refactor", "release": "patch"},
+                  {"type": "style", "release": "patch"},
+                  {"type": "ghp", release:false}, // only github pages generation -> no new release
+                ]
+              }],
           "@semantic-release/release-notes-generator",
           [
             "@semantic-release/npm",

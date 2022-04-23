@@ -166,9 +166,9 @@ const setupGitReactTypescript = async () => {
     await execAsync(` rm -rf ./${tmpF}`, cdw);
 
     waitMSG('installing storybook ...');
-    await execAsync(`npx sb init --builder webpack5`, cdw);
-    await execAsync(`npx sb upgrade --prerelease`, cdw);
-    await execAsync(` rm -rf ./src/stories`, cdw);
+    await execAsync(`npx sb init --builder webpack5`, cdw, true);
+    await execAsync(`npx sb upgrade --prerelease`, cdw, true);
+    await execAsync(` rm -rf ./src/stories`, cdw, true);
 
     waitMSG('installing semantic-release ...');
     await execAsync(`npm @semantic-release/changelog @semantic-release/commit-analyzer @semantic-release/git @semantic-release/release-notes-generator --save-dev`, cdw);

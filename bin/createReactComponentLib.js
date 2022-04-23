@@ -152,11 +152,12 @@ const setupGitReactTypescript = async () => {
     const rollupResp = await execAsync(`npm install rollup @rollup/plugin-node-resolve @rollup/plugin-typescript @rollup/plugin-commonjs --save-dev`, cdw);
     const rollupPlugResp = await execAsync(`npm install rollup-plugin-dts @rollup/plugin-json rollup-plugin-postcss rollup-plugin-peer-deps-external rollup-plugin-terser --save-dev`, cdw);
 
-    waitMSG('installing TypeScript ...');
+    waitMSG('copy config files from Github ...');
     await execAsync(`mkdir temp`, cdw);
     await execAsync(`git clone --depth 1 --filter=blob:none --no-checkout https://github.com/swissglider/swissglider.th-builder`, `${cdw}/temp`);
-    await execAsync(`git checkout main -- templates`, `${cdw}/temp/swissglider.th-builder`);
+    await execAsync(`git checkout --quiet main -- templates`, `${cdw}/temp/swissglider.th-builder`);
     await execAsync(` cp -a ./temp/swissglider.th-builder/templates/toCopy/* .`, cdw);
+    await execAsync(` rm -rf ./temp .`, cdw);
 
     // const tscResp = await execAsync(` cp -a ../templates/toCopy/. .`, cdw);
 }

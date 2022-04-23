@@ -23,10 +23,7 @@ const prompt = async (message) => {
     });
 }
 
-const checkResponseError = ({error, stdout, stderr}, devNull = false) => {
-    console.log('ERROR', error)
-    console.log('STDOUT',stdout)
-    console.log('STDERR',stderr)
+const checkResponseError = ({error, stdout, stderr}, {devNull = false, getSTDERR = false}) => {
     if (error) {
         if (stdout) successMSG(stdout);
         if (stderr) errMSG(stderr);
@@ -37,6 +34,7 @@ const checkResponseError = ({error, stdout, stderr}, devNull = false) => {
         if (stdout) successMSG(stdout);
         if (stderr) errMSG(stderr);
     }
+    if(getSTDERR) return stderr;
     return stdout;
 }
 
@@ -45,9 +43,9 @@ const checkResponseError = ({error, stdout, stderr}, devNull = false) => {
  * on error it exit the Programm
  * on stderr it prints it out
  */
-const execAsync = async (comman, workingDir = './', devNull = false) => {
+const execAsync = async (command, workingDir = './', params) => {
     return new Promise((resolve, reject) => {
-        exec(comman, { cwd: workingDir }, (error, stdout, stderr) => resolve(checkResponseError({error, stdout, stderr}, devNull)))
+        exec(command, { cwd: workingDir }, (error, stdout, stderr) => resolve(checkResponseError({error, stdout, stderr}, params)))
     })
 }
 
@@ -161,18 +159,18 @@ const setupGitReactTypescript = async () => {
     waitMSG('copy config files from Github ...');
     const tmpF = '__temp__';
     await execAsync(`mkdir ${tmpF}`, cdw);
-    await execAsync(`git clone --depth 1 --filter=blob:none --no-checkout https://github.com/swissglider/swissglider.th-builder`, `${cdw}/${tmpF}`, true);
+    await execAsync(`git clone --depth 1 --filter=blob:none --no-checkout https://github.com/swissglider/swissglider.th-builder`, `${cdw}/${tmpF}`, {devNull:true});
     await execAsync(`git checkout --quiet main -- templates`, `${cdw}/${tmpF}/swissglider.th-builder`);
     await execAsync(` cp -rT ./${tmpF}/swissglider.th-builder/templates/toCopy .`, cdw);
     await execAsync(` rm -rf ./${tmpF}`, cdw);
 
     waitMSG('installing semantic-release ...');
-    await execAsync(`npm  install @semantic-release/changelog @semantic-release/commit-analyzer @semantic-release/git @semantic-release/release-notes-generator --save-dev`, cdw, true);
+    await execAsync(`npm  install @semantic-release/changelog @semantic-release/commit-analyzer @semantic-release/git @semantic-release/release-notes-generator --save-dev`, cdw, {devNull:true});
 
     waitMSG('installing storybook ...');
-    await execAsync(`npx sb init --builder webpack5`, cdw, true);
-    await execAsync(`npx sb upgrade --prerelease`, cdw, true);
-    await execAsync(` rm -rf ./src/stories`, cdw, true);
+    await execAsync(`npx sb init --builder webpack5`, cdw, {devNull:true});
+    await execAsync(`npx sb upgrade --prerelease`, cdw, {devNull:true});
+    await execAsync(` rm -rf ./src/stories`, cdw, {devNull:true});
 }
 
 const adaptPackageJSON = async () => {
@@ -219,9 +217,9 @@ const reInstallNPM = async () => {
     const cdw = `./${inputParams.projectFolder}`;
 
     waitMSG('reinstalling npm (npm install) ...');
-    await execAsync(`rm -rf ./node_modules`, cdw, true);
-    await execAsync(`rm -rf ./package-lock.json`, cdw, true);
-    await execAsync(`npm install`, cdw, true);
+    await execAsync(`rm -rf ./node_modules`, cdw, {devNull:true});
+    await execAsync(`rm -rf ./package-lock.json`, cdw, {devNull:true});
+    await execAsync(`npm install`, cdw, {devNull:true});
 }
 
 const createGitHubRepository = async () => {
@@ -236,7 +234,7 @@ const createGitHubRepository = async () => {
 const checkIfGithubAuthenticated = async () => {
 
     waitMSG('checking if github authenticated ...');
-    const authResponse = await execAsync(`gh auth status`);
+    const authResponse = await execAsync(`gh auth status`, '.', {devNull:true, getSTDERR:true});
     if(!authResponse.includes('Logged in to')){
         console.log('hallo')
         errMSG('you have to login to github first, use: gh auth login');

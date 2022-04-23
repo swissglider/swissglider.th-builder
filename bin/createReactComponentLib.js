@@ -5,7 +5,7 @@ const { stderr } = require('process');
 const readline = require('readline');
 const packageJSON = require('./templates/toChange/package.json');
 const exec = require('child_process').exec;
-import { version } from './package.json';
+const { version } = require("./package.json");
 
 
 const successMSG = (msg => console.warn("\x1b[1m", "\x1b[32m", msg, "\x1b[0m"));

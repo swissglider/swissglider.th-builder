@@ -24,7 +24,9 @@ const prompt = async (message) => {
 }
 
 const checkResponseError = ({error, stdout, stderr}, devNull = false) => {
-    console.log(error,stdout,stderr)
+    console.log('ERROR', error)
+    console.log('STDOUT',stdout)
+    console.log('STDERR',stderr)
     if (error) {
         if (stdout) successMSG(stdout);
         if (stderr) errMSG(stderr);

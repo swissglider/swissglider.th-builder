@@ -30,12 +30,9 @@ const checkResponseError = ({error, stdout, stderr}, devNull = false) => {
         errMSG(error);
         exitProg();
     }
-    if (stderr) {
-        if(devNull !== true){
-            console.log(devNull);
-            if (stdout) successMSG(stdout);
-            if (stderr) errMSG(stderr);
-        }
+    if (stderr && devNull !== true) {
+        if (stdout) successMSG(stdout);
+        if (stderr) errMSG(stderr);
     }
     return stdout;
 }
@@ -166,13 +163,13 @@ const setupGitReactTypescript = async () => {
     await execAsync(` cp -rT ./${tmpF}/swissglider.th-builder/templates/toCopy .`, cdw);
     await execAsync(` rm -rf ./${tmpF}`, cdw);
 
+    waitMSG('installing semantic-release ...');
+    await execAsync(`npm  install @semantic-release/changelog @semantic-release/commit-analyzer @semantic-release/git @semantic-release/release-notes-generator --save-dev`, cdw, true);
+
     waitMSG('installing storybook ...');
     await execAsync(`npx sb init --builder webpack5`, cdw, true);
     await execAsync(`npx sb upgrade --prerelease`, cdw, true);
     await execAsync(` rm -rf ./src/stories`, cdw, true);
-
-    waitMSG('installing semantic-release ...');
-    await execAsync(`npm  install @semantic-release/changelog @semantic-release/commit-analyzer @semantic-release/git @semantic-release/release-notes-generator --save-dev`, cdw);
 }
 
 const adaptPackageJSON = async () => {
@@ -215,6 +212,35 @@ const adaptPackageJSON = async () => {
     fs.writeFileSync(`./${inputParams.projectFolder}/package.json`, JSON.stringify(newPackageJSON, null, 2))
 }
 
+const reInstallNPM = async () => {
+    const cdw = `./${inputParams.projectFolder}`;
+
+    waitMSG('reinstalling npm (npm install) ...');
+    await execAsync(`rm -rf ./node_modules`, cdw, true);
+    await execAsync(`rm -rf ./package-lock.json`, cdw, true);
+    await execAsync(`npm install`, cdw, true);
+}
+
+const createGitHubRepository = async () => {
+    const cdw = `./${inputParams.projectFolder}`;
+
+    waitMSG('creating github repository ...');
+    await execAsync(`git add . && git commit -m "initial commit"`, cdw);
+    const authResponce = await execAsync(`gh auth status`, cdw)
+    execAsync(`gh repo create ${inputParams.packageName} --public --source=. --remote=origin --description=${inputParams.description} --push`, cdw)
+}
+
+const checkIfGithubAuthenticated = async () => {
+    const cdw = `./${inputParams.projectFolder}`;
+
+    waitMSG('checking if github authenticated ...');
+    const authResponce = await execAsync(`gh auth status`, cdw)
+    if(!authResponce.includes('Logged in to')){
+        errMSG('you have to login to github first, use: gh auth login');
+        exitProg();
+    }
+}
+
 const main = async () => {
     // **************************************
     // Main Program
@@ -223,11 +249,13 @@ const main = async () => {
     successMSG("  Welcome and thanks for using the Swissglider - TheHome - Builder")
     successMSG("====================================================================")
     successMSG(`Version ${process.env.package_version}`);
+    await checkIfGithubAuthenticated();
     await grapInputParameters();
     createProjectFolder();
     createPackageJSON();
     await setupGitReactTypescript();
     await adaptPackageJSON();
+    await reInstallNPM();
     process.exit();
 }
 

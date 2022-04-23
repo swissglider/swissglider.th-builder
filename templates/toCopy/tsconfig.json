@@ -1,5 +1,5 @@
 {
-    "compilerOptions": {
+  "compilerOptions": {
       /* Visit https://aka.ms/tsconfig.json to read more about this file */
       "target": "es5",
       "esModuleInterop": true,
@@ -14,7 +14,16 @@
       "outDir": "dist",
       "moduleResolution": "node",
       "allowSyntheticDefaultImports": true,
-      "emitDeclarationOnly": true,
-    },
-    "exclude": ["liveStorybook","node_modules", "**/*.spec.ts", "**/*.test.ts", "**/*.story.ts", "**/*.spec.tsx", "**/*.test.tsx", "**/*.story.tsx"]
-  }
+      "emitDeclarationOnly": true
+  },
+  "exclude": [
+      "liveStorybook",
+      "node_modules",
+      "**/*.spec.ts",
+      "**/*.test.ts",
+      "**/*.story.ts",
+      "**/*.spec.tsx",
+      "**/*.test.tsx",
+      "**/*.story.tsx"
+  ]
+}

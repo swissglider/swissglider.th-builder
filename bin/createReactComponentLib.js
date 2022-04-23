@@ -148,6 +148,9 @@ const setupGitReactTypescript = async () => {
     waitMSG('installing React ...');
     const reactResp = await execAsync(`npm install react react-dom typescript @types/react --save-dev`, cdw);
 
+    waitMSG('installing Webpack ...');
+    await execAsync(`npm install webpack --save-dev`, cdw);
+
     waitMSG('installing Rollup ...');
     const rollupResp = await execAsync(`npm install rollup @rollup/plugin-node-resolve @rollup/plugin-typescript @rollup/plugin-commonjs --save-dev`, cdw);
     const rollupPlugResp = await execAsync(`npm install rollup-plugin-dts @rollup/plugin-json rollup-plugin-postcss rollup-plugin-peer-deps-external rollup-plugin-terser --save-dev`, cdw);
@@ -160,17 +163,20 @@ const setupGitReactTypescript = async () => {
     await execAsync(` cp -rT ./${tmpF}/swissglider.th-builder/templates/toCopy .`, cdw);
     await execAsync(` rm -rf ./${tmpF}`, cdw);
 
-    waitMSG('installing storyboo');
+    waitMSG('installing storybook ...');
     await execAsync(`npx sb init --builder webpack5`, cdw);
+    await execAsync(`npx sb upgrade --prerelease`, cdw);
+    await execAsync(` rm -rf ./src/stories`, cdw);
 }
 
 const adaptPackageJSON = async () => {
+    waitMSG('adapting package.json ...');
     const rawPackageJSON = fs.readFileSync(`./${inputParams.projectFolder}/package.json`);
     const newPackageJSON = JSON.parse(rawPackageJSON);
     const reactVersion = newPackageJSON.devDependencies.react;
     const reactDOMVersion = newPackageJSON.devDependencies['react-dom'];
-    delete newPackageJSON.devDependencies.react;
-    delete newPackageJSON.devDependencies['react-dom'];
+    // delete newPackageJSON.devDependencies.react;
+    // delete newPackageJSON.devDependencies['react-dom'];
     newPackageJSON.peerDependencies = {
         react: reactVersion,
         'react-dom': reactDOMVersion

@@ -2,7 +2,7 @@
 import { useDefaultHooks as useDefaultHooks_ } from './10-addons/hooks/useDefaultHook'
 import { default as DefaultComponent_ } from './6-components/DefaultComponent/DefaultComponent';
 
-export namespace IOBApp {
+export namespace DefaultAPP {
     export namespace Components {
         export const DefaultComponent = DefaultComponent_;
     }

@@ -6,7 +6,7 @@ const readline = require('readline');
 const packageJSON = require('./templates/toChange/package.json');
 const exec = require('child_process').exec;
 
-
+// https://stackoverflow.com/questions/9781218/how-to-change-node-jss-console-font-color
 const successMSG = (msg => console.warn("\x1b[1m", "\x1b[32m", msg, "\x1b[0m"));
 const warnMSG = (msg => console.warn("\x1b[2m", "\x1b[30m", "\x1b[43m", msg, "\x1b[0m"));
 // const errMSG = (msg => console.error("\x1b[5m", "\x1b[30m", "\x1b[41m", msg, "\x1b[0m"));
@@ -159,20 +159,23 @@ const setupGitReactTypescript = async () => {
     await execAsync(`git checkout --quiet main -- templates`, `${cdw}/${tmpF}/swissglider.th-builder`);
     await execAsync(` cp -a ./${tmpF}/swissglider.th-builder/templates/toCopy/* .`, cdw);
     await execAsync(` rm -rf ./${tmpF}`, cdw);
+
+    waitMSG('installing ');
 }
 
 const main = async () => {
     // **************************************
     // Main Program
     // **************************************
-    successMSG("==================================================================")
+    successMSG("===================================================================")
     successMSG("  Welcome and thanks for using the Swissglider - TheHome - Builder")
-    successMSG("==================================================================")
+    successMSG("===================================================================")
     successMSG(`Version ${process.env.package_version}`);
     await grapInputParameters();
     createProjectFolder();
     createPackageJSON();
     await setupGitReactTypescript();
+    console.log(packageJSON);
     process.exit();
 }
 

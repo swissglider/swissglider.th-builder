@@ -1,0 +1,1 @@
+export const useDefaultHooks = (): void => console.log('I\'m a default Hook');

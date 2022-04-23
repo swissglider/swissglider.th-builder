@@ -18,20 +18,20 @@ const rl = readline.createInterface(process.stdin, process.stdout);
 
 const prompt = async (message) => {
     return new Promise((resolve, reject) => {
-        rl.question(message, (input) => resolve(input) );
-      });
+        rl.question(message, (input) => resolve(input));
+    });
 }
 
 const checkResponseError = (error, stdout, stderr) => {
-    if(error){
-        if(stdout) successMSG(stdout);
-        if(stderr) errMSG(stderr);
+    if (error) {
+        if (stdout) successMSG(stdout);
+        if (stderr) errMSG(stderr);
         errMSG(error);
         exitProg();
     }
-    if(stderr){
-        if(stdout) successMSG(stdout);
-        if(stderr) errMSG(stderr);
+    if (stderr) {
+        if (stdout) successMSG(stdout);
+        if (stderr) errMSG(stderr);
     }
     return stdout;
 }
@@ -43,29 +43,29 @@ const checkResponseError = (error, stdout, stderr) => {
  */
 const execAsync = async (comman, workingDir = './') => {
     return new Promise((resolve, reject) => {
-        exec(comman, {cwd: workingDir}, (error, stdout, stderr) => resolve(checkResponseError(error, stdout, stderr)))
+        exec(comman, { cwd: workingDir }, (error, stdout, stderr) => resolve(checkResponseError(error, stdout, stderr)))
     })
 }
 
 const inputParams = {
-    projectName:undefined,
-    packageName:undefined,
-    projectFolder:undefined,
-    author_name:undefined,
-    author_email:undefined,
-    version:undefined,
-    license:undefined,
-    keywords:undefined,
-    description:'',
-    branch:'main',
-    help:false,
+    projectName: undefined,
+    packageName: undefined,
+    projectFolder: undefined,
+    author_name: undefined,
+    author_email: undefined,
+    version: undefined,
+    license: undefined,
+    keywords: undefined,
+    description: '',
+    branch: 'main',
+    help: false,
 }
 
 const shortInputMap = {
-    h:'help',
+    h: 'help',
 }
 
-const printHelpMenu = ()=>{
+const printHelpMenu = () => {
     console.log("---------- Help Menu --------");
     exitProg();
 }
@@ -76,19 +76,19 @@ const grapInputParameters = async () => {
     // **************************************
     const args = process.argv.slice(2);
     args.forEach((param, index, array) => {
-        if(param.startsWith('--')){
+        if (param.startsWith('--')) {
             const key = param.substring(2);
             const value = (array[index + 1] && !(array[index + 1].startsWith('-'))) ? array[index + 1] : true;
-            if(inputParams.hasOwnProperty(key)){
+            if (inputParams.hasOwnProperty(key)) {
                 inputParams[key] = value;
             } else {
                 warnMSG(`-- The key/value is not avalable => ${key}/${value}`)
             }
         }
-        else if(param.startsWith('-')){
+        else if (param.startsWith('-')) {
             const key = param.substring(1);
             const value = (array[index + 1] && !(array[index + 1].startsWith('-'))) ? array[index + 1] : true;
-            if(shortInputMap.hasOwnProperty(key)){
+            if (shortInputMap.hasOwnProperty(key)) {
                 inputParams[shortInputMap[key]] = value;
             } else {
                 warnMSG(`- The key/value is not avalable => ${key}/${value}`)
@@ -96,14 +96,14 @@ const grapInputParameters = async () => {
         }
     });
 
-    if(inputParams.help) printHelpMenu();
+    if (inputParams.help) printHelpMenu();
 
-    if(inputParams.projectName === undefined) inputParams.projectName  = await prompt('Enter the project-name: ');
-    if(inputParams.author_name === undefined) inputParams.author_name  = await prompt('Enter the author-name: ');
-    if(inputParams.author_email === undefined) inputParams.author_email  = await prompt('Enter the author-email: ');
+    if (inputParams.projectName === undefined) inputParams.projectName = await prompt('Enter the project-name: ');
+    if (inputParams.author_name === undefined) inputParams.author_name = await prompt('Enter the author-name: ');
+    if (inputParams.author_email === undefined) inputParams.author_email = await prompt('Enter the author-email: ');
 
-    if(inputParams.packageName === undefined) inputParams.packageName = `swissglider.${inputParams.projectName}`;
-    if(inputParams.projectFolder === undefined) inputParams.projectFolder = inputParams.projectName.replace(/ +/g,'_');
+    if (inputParams.packageName === undefined) inputParams.packageName = `swissglider.${inputParams.projectName}`;
+    if (inputParams.projectFolder === undefined) inputParams.projectFolder = inputParams.projectName.replace(/ +/g, '_');
 }
 
 
@@ -112,11 +112,11 @@ const createProjectFolder = () => {
     // create folder
     // **************************************
 
-    if (!fs.existsSync(inputParams.projectFolder)){
+    if (!fs.existsSync(inputParams.projectFolder)) {
         fs.mkdirSync(inputParams.projectFolder);
     }
 
-    if(fs.readdirSync(inputParams.projectFolder).length !== 0) {
+    if (fs.readdirSync(inputParams.projectFolder).length !== 0) {
         errMSG(`Projectfolder: ${inputParams.projectFolder} musst be empty !!`)
         exitProg();
     }
@@ -128,11 +128,11 @@ const createPackageJSON = () => {
     // create Package.json
     // **************************************
     packageJSON.name = inputParams.packageName;
-    if(inputParams.version) packageJSON.version = inputParams.version;
+    if (inputParams.version) packageJSON.version = inputParams.version;
     packageJSON.author.name = inputParams.author_name;
     packageJSON.author.email = inputParams.author_email;
-    if(inputParams.license)  packageJSON.license= inputParams.license;
-    if(inputParams.keywords) packageJSON.keywords= inputParams.keywords;
+    if (inputParams.license) packageJSON.license = inputParams.license;
+    if (inputParams.keywords) packageJSON.keywords = inputParams.keywords;
 
     // console.log(JSON.stringify(packageJSON, null, 2));
     fs.writeFileSync(`./${inputParams.projectFolder}/package.json`, JSON.stringify(packageJSON, null, 2))
@@ -152,13 +152,19 @@ const setupGitReactTypescript = async () => {
     const rollupPlugResp = await execAsync(`npm install rollup-plugin-dts @rollup/plugin-json rollup-plugin-postcss rollup-plugin-peer-deps-external rollup-plugin-terser --save-dev`, cdw);
 
     waitMSG('installing TypeScript ...');
-    const tscResp = await execAsync(` cp -a ../templates/toCopy/. .`, cdw);
+    await execAsync(`mkdir temp`, cdw);
+    await execAsync(`git clone --depth 1 --filter=blob:none --no-checkout https://github.com/swissglider/swissglider.th-builder`, `${cdw}/temp`);
+    await execAsync(`git checkout main -- templates`, `${cdw}/temp/swissglider.th-builder`);
+    await execAsync(` cp -a ${cdw}/temp/swissglider.th-builder/templates/toCopy/. .`, cdw);
+
+    // const tscResp = await execAsync(` cp -a ../templates/toCopy/. .`, cdw);
 }
 
 const main = async () => {
     // **************************************
     // Main Program
     // **************************************
+    successMSG("Version 1.3");
     await grapInputParameters();
     createProjectFolder();
     createPackageJSON();

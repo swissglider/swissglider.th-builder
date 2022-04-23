@@ -43,7 +43,7 @@ const checkResponseError = ({error, stdout, stderr}, {devNull = false, getSTDERR
  * on error it exit the Programm
  * on stderr it prints it out
  */
-const execAsync = async (command, workingDir = './', params) => {
+const execAsync = async (command, workingDir = './', params={}) => {
     return new Promise((resolve, reject) => {
         exec(command, { cwd: workingDir }, (error, stdout, stderr) => resolve(checkResponseError({error, stdout, stderr}, params)))
     })
@@ -235,7 +235,6 @@ const checkIfGithubAuthenticated = async () => {
 
     waitMSG('checking if github authenticated ...');
     const authResponse = await execAsync(`gh auth status`, '.', {devNull:true, getSTDERR:true, ignoreError:true});
-    console.log('Resp:', authResponse)
     if(!authResponse.includes('Logged in to')){
         errMSG('you have to login to github first, use: gh auth login');
         exitProg();

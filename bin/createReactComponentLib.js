@@ -4,7 +4,8 @@ const fs = require('fs');
 const { stderr } = require('process');
 const readline = require('readline');
 const packageJSON = require('./templates/toChange/package.json');
-var exec = require('child_process').exec;
+const exec = require('child_process').exec;
+import { version } from './package.json';
 
 
 const successMSG = (msg => console.warn("\x1b[1m", "\x1b[32m", msg, "\x1b[0m"));
@@ -156,7 +157,7 @@ const setupGitReactTypescript = async () => {
     await execAsync(`mkdir temp`, cdw);
     await execAsync(`git clone --depth 1 --filter=blob:none --no-checkout https://github.com/swissglider/swissglider.th-builder`, `${cdw}/temp`);
     await execAsync(`git checkout main -- templates`, `${cdw}/temp/swissglider.th-builder`);
-    await execAsync(` cp -a ${cdw}/temp/swissglider.th-builder/templates/toCopy/* .`, cdw);
+    await execAsync(` cp -a ./temp/swissglider.th-builder/templates/toCopy/* .`, cdw);
 
     // const tscResp = await execAsync(` cp -a ../templates/toCopy/. .`, cdw);
 }
@@ -165,7 +166,7 @@ const main = async () => {
     // **************************************
     // Main Program
     // **************************************
-    successMSG(`Version ${process.env.npm_package_version}`);
+    successMSG(`Version ${version}`);
     await grapInputParameters();
     createProjectFolder();
     createPackageJSON();

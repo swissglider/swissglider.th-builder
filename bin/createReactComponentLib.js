@@ -1,45 +1,9 @@
 #! /usr/bin/env node
 
 import fs from 'fs'; 
-import readline from 'readline';
-import exec from 'child_process';
 import msgFunctions from './messageFunctions.js';
-
-const exitProg = () => process.exit(1);
-
-const rl = readline.createInterface(process.stdin, process.stdout);
-
-const prompt = async (message) => {
-    return new Promise((resolve, reject) => {
-        rl.question(message, (input) => resolve(input));
-    });
-}
-
-const checkResponseError = ({error, stdout, stderr}, {devNull = false, getSTDERR = false, ignoreError=false}) => {
-    if (error && !ignoreError) {
-        if (stdout) msgFunctions.stdMSG(stdout);
-        if (stderr) msgFunctions.errMSG(stderr);
-        msgFunctions.errMSG(error);
-        exitProg();
-    }
-    if (stderr && devNull !== true) {
-        if (stdout) msgFunctions.stdMSG(stdout);
-        if (stderr) msgFunctions.errMSG(stderr);
-    }
-    if(getSTDERR) return stderr;
-    return stdout;
-}
-
-/**
- * returns an object with an stdout
- * on error it exit the Programm
- * on stderr it prints it out
- */
-const execAsync = async (command, workingDir = './', params={}) => {
-    return new Promise((resolve, reject) => {
-        exec.exec(command, { cwd: workingDir }, (error, stdout, stderr) => resolve(checkResponseError({error, stdout, stderr}, params)))
-    })
-}
+import execAsync from './asyncExecHandler.js';
+import exitProg from './exitHandler';
 
 const inputParams = {
     projectName: undefined,
@@ -92,9 +56,9 @@ const grapInputParameters = async () => {
 
     if (inputParams.help) printHelpMenu();
 
-    if (inputParams.projectName === undefined) inputParams.projectName = await prompt('Enter the project-name: ');
-    if (inputParams.author_name === undefined) inputParams.author_name = await prompt('Enter the author-name: ');
-    if (inputParams.author_email === undefined) inputParams.author_email = await prompt('Enter the author-email: ');
+    if (inputParams.projectName === undefined) inputParams.projectName = await msgFunctions.prompt('Enter the project-name: ');
+    if (inputParams.author_name === undefined) inputParams.author_name = await msgFunctions.prompt('Enter the author-name: ');
+    if (inputParams.author_email === undefined) inputParams.author_email = await msgFunctions.prompt('Enter the author-email: ');
 
     if (inputParams.packageName === undefined) inputParams.packageName = `swissglider.${inputParams.projectName}`;
     if (inputParams.projectFolder === undefined) inputParams.projectFolder = inputParams.projectName.replace(/ +/g, '_');
@@ -158,7 +122,7 @@ const downloadFromGithub = async () => {
 
 }
 
-const adaptFilesWIthPackageName = async () => {
+const adaptFilesWithPackageName = async () => {
     const cdw = `./${inputParams.projectFolder}`;
 
     msgFunctions.waitMSG('change files with new packageName');
@@ -315,7 +279,7 @@ const main = async () => {
 
     await downloadFromGithub();
     createPackageJSON();
-    await adaptFilesWIthPackageName();
+    await adaptFilesWithPackageName();
     await setupGitReactTypescript();
     await adaptFilesJSON();
     await reInstallNPM();

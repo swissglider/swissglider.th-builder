@@ -1,3 +1,5 @@
+import readline from 'readline';
+
 // https://stackoverflow.com/questions/9781218/how-to-change-node-jss-console-font-color
 const successMSG = (msg => console.log("\x1b[1m", "\x1b[32m", msg, "\x1b[0m"));
 const warnMSG = (msg => console.warn("\x1b[2m", "\x1b[30m", "\x1b[43m", msg, "\x1b[0m"));
@@ -7,7 +9,7 @@ const errMSG = (msg) => {
 }
 
 const waitMSG = (msg) => {
-     console.log("\x1b[5m", "\x1b[34m", " ☕ ", "\x1b[1m", "\x1b[34m", msg, "\x1b[0m");
+     console.log("\x1b[5m", "\x1b[34m", " ☕", "\x1b[0m", "\x1b[1m", "\x1b[34m", msg, "\x1b[0m");
 }
 
 const successJobMSG = (msg, successIcon = "✔") => {
@@ -24,6 +26,13 @@ const rewriteLastLine = (msg, writeFunction = successMSG) => {
 
 const stdMSG = (msg => console.log(msg));
 
+const prompt = async (message) => {
+    const rl = readline.createInterface(process.stdin, process.stdout);
+    return new Promise((resolve, reject) => {
+        rl.question(message, (input) => resolve(input));
+    });
+}
+
 const msgFunctions = {
     successMSG: successMSG,
     warnMSG: warnMSG,
@@ -32,6 +41,7 @@ const msgFunctions = {
     rewriteLastLine: rewriteLastLine,
     successJobMSG:successJobMSG,
     stdMSG:stdMSG,
+    prompt:prompt
 }
 
 export default msgFunctions;

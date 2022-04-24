@@ -1,0 +1,1 @@
+const exitProg = () => process.exit(1);

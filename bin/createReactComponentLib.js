@@ -265,7 +265,7 @@ const createLiveStoryBookEnvironmen = async () => {
     const rawPackageJSON = fs.readFileSync(`./${inputParams.projectFolder}/liveStorybook/package.json`);
     const newPackageJSON = JSON.parse(rawPackageJSON);
     if (inputParams.version) newPackageJSON.version = inputParams.version;
-    newPackageJSON.author.name = {
+    newPackageJSON.author = {
         name: inputParams.author_name,
         email: inputParams.author_email,
     };
@@ -293,6 +293,7 @@ const main = async () => {
     // **************************************
     successMSG("====================================================================")
     successMSG("  Welcome and thanks for using Swissglider's - TheHome - Builder")
+    successMSG("  😊😊 Take a coffee, this can go some minutes 😊😊")
     successMSG("====================================================================")
     successMSG(``);
     await checkIfGithubAuthenticated();

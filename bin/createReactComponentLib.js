@@ -8,7 +8,8 @@
 
 import fs from 'fs'; 
 import readline from 'readline';
-import packageJSON from './templates/toChange/package.json';
+// import packageJSON from './templates/toChange/package.json';
+const packageJSON = require('./templates/toChange/package.json');
 import exec from 'child_process';
 
 // https://stackoverflow.com/questions/9781218/how-to-change-node-jss-console-font-color

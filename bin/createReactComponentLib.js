@@ -265,8 +265,10 @@ const createLiveStoryBookEnvironmen = async () => {
     const rawPackageJSON = fs.readFileSync(`./${inputParams.projectFolder}/liveStorybook/package.json`);
     const newPackageJSON = JSON.parse(rawPackageJSON);
     if (inputParams.version) newPackageJSON.version = inputParams.version;
-    newPackageJSON.author.name = inputParams.author_name;
-    newPackageJSON.author.email = inputParams.author_email;
+    newPackageJSON.author.name = {
+        name: inputParams.author_name,
+        email: inputParams.author_email,
+    };
     if (inputParams.license) newPackageJSON.license = inputParams.license;
     newPackageJSON.homepage = `https://${inputParams.author_name}.github.io/${inputParams.packageName}`
     fs.writeFileSync(`./${inputParams.projectFolder}/liveStorybook/package.json`, JSON.stringify(newPackageJSON, null, 2));

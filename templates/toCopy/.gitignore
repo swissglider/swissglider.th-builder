@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+liveStorybook/node_modules
+liveStorybook/storybook-static

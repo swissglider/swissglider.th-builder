@@ -1,0 +1,19 @@
+name: 'GH-Pages'
+on:
+    push:
+        branches:
+            - main
+jobs:
+    deploy_gh_pages:
+        if: startsWith(github.event.head_commit.message, 'ghp:')
+        runs-on: ubuntu-latest
+        steps:
+            - name: Deploy to gh pages only when commit starts with ghp
+              run: |
+                  echo 'Commit with ghp:'
+    test:
+        if: startsWith(github.event.head_commit.message, 'ghp:') === false
+        runs-on: ubuntu-latest
+        steps:
+            - run: |
+                  echo 'Commit without ghp:'

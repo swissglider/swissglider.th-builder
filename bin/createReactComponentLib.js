@@ -279,10 +279,11 @@ const createLiveStoryBookEnvironmen = async () => {
     await execAsync(`npm install webpack --save-dev`, cdw);
     await execAsync(`npx sb init --builder webpack5`, cdw, {devNull:true});
     await execAsync(`npx sb upgrade --prerelease`, cdw, {devNull:true});
-    // await execAsync(` rm -rf ./src/stories`, cdw, {devNull:true});
-    // await execAsync(`rm -rf ./node_modules`, cdw, {devNull:true});
-    // await execAsync(`rm -rf ./package-lock.json`, cdw, {devNull:true});
-    // await execAsync(`npm install`, cdw, {devNull:true});
+    await execAsync(` rm -rf ./stories`, cdw, {devNull:true});
+    await execAsync(` mv ./stories_ ./stories`, cdw, {devNull:true});
+    await execAsync(`rm -rf ./node_modules`, cdw, {devNull:true});
+    await execAsync(`rm -rf ./package-lock.json`, cdw, {devNull:true});
+    await execAsync(`npm install`, cdw, {devNull:true});
     rewriteLastLine(' ✔  createLiveStoryBookEnvironment::install Packages');
 
 }
@@ -293,7 +294,7 @@ const main = async () => {
     // **************************************
     successMSG("====================================================================")
     successMSG("  Welcome and thanks for using Swissglider's - TheHome - Builder")
-    successMSG("  😊😊 Take a coffee, this can go some minutes 😊😊")
+    successMSG("      😊 😊 Take a coffee, this can go some minutes 😊 😊")
     successMSG("====================================================================")
     successMSG(``);
     await checkIfGithubAuthenticated();
@@ -303,8 +304,10 @@ const main = async () => {
     await setupGitReactTypescript();
     await adaptPackageJSON();
     await reInstallNPM();
-    await createGitHubRepository();
     await createLiveStoryBookEnvironmen();
+
+    
+    await createGitHubRepository();
     process.exit();
 }
 

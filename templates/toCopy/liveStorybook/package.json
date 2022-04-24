@@ -5,7 +5,7 @@
     "main": "index.js",
     "scripts": {
         "test": "echo hallo",
-        "predeploy": "npm run build-storybook",
+        "predeploy": "build-storybook --no-dll",
         "deploy-storybook": "gh-pages -d storybook-static"
     },
     "license": "MIT"

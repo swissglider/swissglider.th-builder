@@ -1,28 +1,9 @@
 #! /usr/bin/env node
 
-// const fs = require('fs');
-// const { stderr } = require('process');
-// const readline = require('readline');
-// const packageJSON = require('./templates/toChange/package.json');
-// const exec = require('child_process').exec;
-
 import fs from 'fs'; 
 import readline from 'readline';
-// import packageJSON from './templates/toChange/package.json';
-// const packageJSON = require('./templates/toChange/package.json');
 import exec from 'child_process';
-
-// https://stackoverflow.com/questions/9781218/how-to-change-node-jss-console-font-color
-const successMSG = (msg => console.warn("\x1b[1m", "\x1b[32m", msg, "\x1b[0m"));
-const warnMSG = (msg => console.warn("\x1b[2m", "\x1b[30m", "\x1b[43m", msg, "\x1b[0m"));
-// const errMSG = (msg => console.error("\x1b[5m", "\x1b[30m", "\x1b[41m", msg, "\x1b[0m"));
-const errMSG = (msg => console.error("\x1b[1m", "\x1b[31m", msg, "\x1b[0m"));
-const waitMSG = (msg => console.log("\x1b[1m", "\x1b[34m", ` --> ${msg}`, "\x1b[0m"));
-const rewriteLastLine = (msg, writeFunction = successMSG) => {
-    process.stdout.moveCursor(0, -1) // up one line
-    process.stdout.clearLine(1) // from cursor to end
-    writeFunction(msg);
-}
+import msgFunctions from './messageFunctions';
 
 const exitProg = () => process.exit(1);
 
@@ -36,14 +17,14 @@ const prompt = async (message) => {
 
 const checkResponseError = ({error, stdout, stderr}, {devNull = false, getSTDERR = false, ignoreError=false}) => {
     if (error && !ignoreError) {
-        if (stdout) successMSG(stdout);
-        if (stderr) errMSG(stderr);
-        errMSG(error);
+        if (stdout) msgFunctions.stdMSG(stdout);
+        if (stderr) msgFunctions.errMSG(stderr);
+        msgFunctions.errMSG(error);
         exitProg();
     }
     if (stderr && devNull !== true) {
-        if (stdout) successMSG(stdout);
-        if (stderr) errMSG(stderr);
+        if (stdout) msgFunctions.stdMSG(stdout);
+        if (stderr) msgFunctions.errMSG(stderr);
     }
     if(getSTDERR) return stderr;
     return stdout;
@@ -95,7 +76,7 @@ const grapInputParameters = async () => {
             if (inputParams.hasOwnProperty(key)) {
                 inputParams[key] = value;
             } else {
-                warnMSG(`-- The key/value is not avalable => ${key}/${value}`)
+                msgFunctions.warnMSG(`-- The key/value is not avalable => ${key}/${value}`)
             }
         }
         else if (param.startsWith('-')) {
@@ -104,7 +85,7 @@ const grapInputParameters = async () => {
             if (shortInputMap.hasOwnProperty(key)) {
                 inputParams[shortInputMap[key]] = value;
             } else {
-                warnMSG(`- The key/value is not avalable => ${key}/${value}`)
+                msgFunctions.warnMSG(`- The key/value is not avalable => ${key}/${value}`)
             }
         }
     });
@@ -130,7 +111,7 @@ const createProjectFolder = () => {
     }
 
     if (fs.readdirSync(inputParams.projectFolder).length !== 0) {
-        errMSG(`Projectfolder: ${inputParams.projectFolder} musst be empty !!`)
+        msgFunctions.errMSG(`Projectfolder: ${inputParams.projectFolder} musst be empty !!`)
         exitProg();
     }
 }
@@ -142,7 +123,7 @@ const createPackageJSON = () => {
     // **************************************
 
 
-    waitMSG('create package.json ...');
+    msgFunctions.waitMSG('create package.json ...');
     const rawPackageJSON = fs.readFileSync(`./${inputParams.projectFolder}/package.json`);
     const newPackageJSON = JSON.parse(rawPackageJSON);
     newPackageJSON.name = inputParams.packageName.toLowerCase();
@@ -155,67 +136,67 @@ const createPackageJSON = () => {
     if (inputParams.keywords) newPackageJSON.keywords = inputParams.keywords;
 
     fs.writeFileSync(`./${inputParams.projectFolder}/package.json`, JSON.stringify(newPackageJSON, null, 2));
-    rewriteLastLine(' ✔  npm package.json created');
+    msgFunctions.successJobMSG('npm package.json created');
 
 }
 
 const downloadFromGithub = async () => {
     const cdw = `./${inputParams.projectFolder}`;
 
-    waitMSG('installing Git ...');
+    msgFunctions.waitMSG('installing Git ...');
     await execAsync(`git init --quiet --initial-branch=${inputParams.branch}`, cdw);
-    rewriteLastLine(' ✔  installed Git');
+    msgFunctions.successJobMSG('installed Git');
 
-    waitMSG('copy config files from Github ...');
+    msgFunctions.waitMSG('copy config files from Github ...');
     const tmpF = '__temp__';
     await execAsync(`mkdir ${tmpF}`, cdw);
     await execAsync(`git clone --depth 1 --filter=blob:none --no-checkout https://github.com/swissglider/swissglider.th-builder`, `${cdw}/${tmpF}`, {devNull:true});
     await execAsync(`git checkout --quiet main -- templates`, `${cdw}/${tmpF}/swissglider.th-builder`);
     await execAsync(` cp -rT ./${tmpF}/swissglider.th-builder/templates/toCopy .`, cdw);
     await execAsync(` rm -rf ./${tmpF}`, cdw);
-    rewriteLastLine(' ✔  copy config from Github');
+    msgFunctions.successJobMSG('copy config from Github');
 
 }
 
 const adaptFilesWIthPackageName = async () => {
     const cdw = `./${inputParams.projectFolder}`;
 
-    waitMSG('change files with new packageName');
+    msgFunctions.waitMSG('change files with new packageName');
     await execAsync(`sed -i "s/\\£{packageName}/${inputParams.packageName}/" ./.github/workflows/gh-pages.yml`, cdw, {devNull:true});
     await execAsync(`sed -i "s/\\£{packageName}/${inputParams.packageName}/" ./liveStorybook/stories_/Default.stories.tsx`, cdw, {devNull:true});
-    rewriteLastLine(' ✔  changed files with new packageName');
+    msgFunctions.successJobMSG('changed files with new packageName');
 }
 
 const setupGitReactTypescript = async () => {
     const cdw = `./${inputParams.projectFolder}`;
 
-    waitMSG('installing React ...');
+    msgFunctions.waitMSG('installing React ...');
     await execAsync(`npm install react react-dom typescript @types/react --save-dev`, cdw);
-    rewriteLastLine(' ✔  installed React');
+    msgFunctions.successJobMSG('installed React');
 
-    waitMSG('installing Webpack ...');
+    msgFunctions.waitMSG('installing Webpack ...');
     await execAsync(`npm install webpack --save-dev`, cdw);
-    rewriteLastLine(' ✔  installed Webpack');
+    msgFunctions.successJobMSG('installed Webpack');
 
-    waitMSG('installing Rollup ...');
+    msgFunctions.waitMSG('installing Rollup ...');
     await execAsync(`npm install rollup @rollup/plugin-node-resolve @rollup/plugin-typescript @rollup/plugin-commonjs --save-dev`, cdw);
     await execAsync(`npm install rollup-plugin-dts @rollup/plugin-json rollup-plugin-postcss rollup-plugin-peer-deps-external rollup-plugin-terser --save-dev`, cdw);
-    rewriteLastLine(' ✔  installed Rollup');
+    msgFunctions.successJobMSG('installed Rollup');
 
-    waitMSG('installing semantic-release ...');
+    msgFunctions.waitMSG('installing semantic-release ...');
     await execAsync(`npm  install @semantic-release/changelog @semantic-release/commit-analyzer @semantic-release/git @semantic-release/release-notes-generator --save-dev`, cdw, {devNull:true});
-    rewriteLastLine(' ✔  installed semantic-release');
+    msgFunctions.successJobMSG('installed semantic-release');
 
-    waitMSG('installing storybook ...');
+    msgFunctions.waitMSG('installing storybook ...');
     await execAsync(`npx sb init --builder webpack5`, cdw, {devNull:true});
     await execAsync(`npx sb upgrade --prerelease`, cdw, {devNull:true});
     await execAsync(` rm -rf ./src/stories`, cdw, {devNull:true});
-    rewriteLastLine(' ✔  installed storybook');
+    msgFunctions.successJobMSG('installed storybook');
 }
 
 const adaptFilesJSON = async () => {
     const cdw = `./${inputParams.projectFolder}`;
-    waitMSG('adapting package.json ...');
+    msgFunctions.waitMSG('adapting package.json ...');
     const rawPackageJSON = fs.readFileSync(`./${inputParams.projectFolder}/package.json`);
     const newPackageJSON = JSON.parse(rawPackageJSON);
     const reactVersion = newPackageJSON.devDependencies.react;
@@ -253,45 +234,45 @@ const adaptFilesJSON = async () => {
         ]
       }
     fs.writeFileSync(`./${inputParams.projectFolder}/package.json`, JSON.stringify(newPackageJSON, null, 2));
-    rewriteLastLine(' ✔  npm install successfull');
+    msgFunctions.successJobMSG('npm install successfull');
 }
 
 const reInstallNPM = async () => {
     const cdw = `./${inputParams.projectFolder}`;
 
-    waitMSG('reinstalling npm (npm install) ...');
+    msgFunctions.waitMSG('reinstalling npm (npm install) ...');
     await execAsync(`rm -rf ./node_modules`, cdw, {devNull:true});
     await execAsync(`rm -rf ./package-lock.json`, cdw, {devNull:true});
     await execAsync(`npm install`, cdw, {devNull:true});
-    rewriteLastLine(' ✔  package.json adapted');
+    msgFunctions.successJobMSG('package.json adapted');
 }
 
 const createGitHubRepository = async () => {
     const cdw = `./${inputParams.projectFolder}`;
 
-    waitMSG('creating github repository ...');
+    msgFunctions.waitMSG('creating github repository ...');
     await execAsync(`git add . && git commit -m "initial commit"`, cdw);
     await execAsync(`gh auth status`, cdw, {devNull:true})
     await execAsync(`gh repo create ${inputParams.packageName} --public --source=. --remote=origin --description="${inputParams.description}" --push`, cdw)
-    rewriteLastLine(' ✔  github repository created and pushed');
+    msgFunctions.successJobMSG('github repository created and pushed');
 }
 
 const checkIfGithubAuthenticated = async () => {
 
-    waitMSG('checking if github authenticated ...');
+    msgFunctions.waitMSG('checking if github authenticated ...');
     const authResponse = await execAsync(`gh auth status`, '.', {devNull:true, getSTDERR:true, ignoreError:true});
     if(!authResponse.includes('Logged in to')){
-        errMSG('you have to login to github first, use: gh auth login');
+        msgFunctions.errMSG('you have to login to github first, use: gh auth login');
         exitProg();
     }
-    rewriteLastLine(' ✔  github authentication ok');
+    msgFunctions.successJobMSG('github authentication ok');
 }
 
 const createLiveStoryBookEnvironmen = async () => {
 
     const cdw = `./${inputParams.projectFolder}/liveStorybook`;
 
-    waitMSG('createLiveStoryBookEnvironment::adapt own packageJSON');
+    msgFunctions.waitMSG('createLiveStoryBookEnvironment::adapt own packageJSON');
     const rawPackageJSON = fs.readFileSync(`./${inputParams.projectFolder}/liveStorybook/package.json`);
     const newPackageJSON = JSON.parse(rawPackageJSON);
     if (inputParams.version) newPackageJSON.version = inputParams.version;
@@ -302,9 +283,9 @@ const createLiveStoryBookEnvironmen = async () => {
     if (inputParams.license) newPackageJSON.license = inputParams.license;
     newPackageJSON.homepage = `https://${inputParams.author_name}.github.io/${inputParams.packageName}`
     fs.writeFileSync(`./${inputParams.projectFolder}/liveStorybook/package.json`, JSON.stringify(newPackageJSON, null, 2));
-    rewriteLastLine(' ✔  createLiveStoryBookEnvironment::adapt own packageJSON');
+    msgFunctions.successJobMSG('createLiveStoryBookEnvironment::adapt own packageJSON');
 
-    waitMSG('createLiveStoryBookEnvironment::install Packages');
+    msgFunctions.waitMSG('createLiveStoryBookEnvironment::install Packages');
     await execAsync(`npm install react react-dom typescript @types/react --save`, cdw);
     await execAsync(`npm install webpack --save-dev`, cdw);
     await execAsync(`npx sb init --builder webpack5`, cdw, {devNull:true});
@@ -314,7 +295,7 @@ const createLiveStoryBookEnvironmen = async () => {
     await execAsync(`rm -rf ./node_modules`, cdw, {devNull:true});
     await execAsync(`rm -rf ./package-lock.json`, cdw, {devNull:true});
     await execAsync(`npm install`, cdw, {devNull:true});
-    rewriteLastLine(' ✔  createLiveStoryBookEnvironment::install Packages');
+    msgFunctions.successJobMSG('createLiveStoryBookEnvironment::install Packages');
 
 }
 
@@ -322,11 +303,11 @@ const main = async () => {
     // **************************************
     // Main Program
     // **************************************
-    successMSG("====================================================================")
-    successMSG("  Welcome and thanks for using Swissglider's - TheHome - Builder")
-    successMSG("      😊 😊 Take a coffee, this will go some minutes 😊 😊")
-    successMSG("====================================================================")
-    successMSG(``);
+    msgFunctions.stdMSG("====================================================================")
+    msgFunctions.stdMSG("  Welcome and thanks for using Swissglider's - TheHome - Builder")
+    msgFunctions.stdMSG("      😊 😊 Take a coffee, this will go some minutes 😊 😊")
+    msgFunctions.stdMSG("====================================================================")
+    msgFunctions.stdMSG(``);
     await checkIfGithubAuthenticated();
     await grapInputParameters();
     createProjectFolder();

@@ -61,7 +61,7 @@ const grapInputParameters = async () => {
     if (inputParams.author_email === undefined) inputParams.author_email = await msgFunctions.prompt('Enter the author-email: ');
     inputParams.author_name = inputParams.author_name.toLowerCase();
 
-    if (inputParams.packageName === undefined) inputParams.packageName = `${inputParams.author_name}.${inputParams}`;
+    if (inputParams.packageName === undefined) inputParams.packageName = `${inputParams.author_name}.${inputParams.projectName}`;
     if (inputParams.projectFolder === undefined) inputParams.projectFolder = inputParams.projectName;
     inputParams.projectFolder = inputParams.projectFolder.replace(/ +/g, '_');
     inputParams.packageName = inputParams.packageName.toLowerCase();

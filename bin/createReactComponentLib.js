@@ -145,6 +145,24 @@ const createPackageJSON = () => {
     fs.writeFileSync(`./${inputParams.projectFolder}/package.json`, JSON.stringify(packageJSON, null, 2))
 }
 
+const downloadFromGithub = async () => {
+    const cdw = `./${inputParams.projectFolder}`;
+
+    waitMSG('installing Git ...');
+    await execAsync(`git init --quiet --initial-branch=${inputParams.branch}`, cdw);
+    rewriteLastLine(' ✔  installed Git');
+
+    waitMSG('copy config files from Github ...');
+    const tmpF = '__temp__';
+    await execAsync(`mkdir ${tmpF}`, cdw);
+    await execAsync(`git clone --depth 1 --filter=blob:none --no-checkout https://github.com/swissglider/swissglider.th-builder`, `${cdw}/${tmpF}`, {devNull:true});
+    await execAsync(`git checkout --quiet main -- templates`, `${cdw}/${tmpF}/swissglider.th-builder`);
+    await execAsync(` cp -rT ./${tmpF}/swissglider.th-builder/templates/toCopy .`, cdw);
+    await execAsync(` rm -rf ./${tmpF}`, cdw);
+    rewriteLastLine(' ✔  copy config from Github');
+
+}
+
 const adaptFilesWIthPackageName = async () => {
     const cdw = `./${inputParams.projectFolder}`;
 
@@ -165,10 +183,6 @@ const adaptFilesWIthPackageName = async () => {
 const setupGitReactTypescript = async () => {
     const cdw = `./${inputParams.projectFolder}`;
 
-    waitMSG('installing Git ...');
-    await execAsync(`git init --quiet --initial-branch=${inputParams.branch}`, cdw);
-    rewriteLastLine(' ✔  installed Git');
-
     waitMSG('installing React ...');
     await execAsync(`npm install react react-dom typescript @types/react --save-dev`, cdw);
     rewriteLastLine(' ✔  installed React');
@@ -181,15 +195,6 @@ const setupGitReactTypescript = async () => {
     await execAsync(`npm install rollup @rollup/plugin-node-resolve @rollup/plugin-typescript @rollup/plugin-commonjs --save-dev`, cdw);
     await execAsync(`npm install rollup-plugin-dts @rollup/plugin-json rollup-plugin-postcss rollup-plugin-peer-deps-external rollup-plugin-terser --save-dev`, cdw);
     rewriteLastLine(' ✔  installed Rollup');
-
-    waitMSG('copy config files from Github ...');
-    const tmpF = '__temp__';
-    await execAsync(`mkdir ${tmpF}`, cdw);
-    await execAsync(`git clone --depth 1 --filter=blob:none --no-checkout https://github.com/swissglider/swissglider.th-builder`, `${cdw}/${tmpF}`, {devNull:true});
-    await execAsync(`git checkout --quiet main -- templates`, `${cdw}/${tmpF}/swissglider.th-builder`);
-    await execAsync(` cp -rT ./${tmpF}/swissglider.th-builder/templates/toCopy .`, cdw);
-    await execAsync(` rm -rf ./${tmpF}`, cdw);
-    rewriteLastLine(' ✔  copy config from Github');
 
     waitMSG('installing semantic-release ...');
     await execAsync(`npm  install @semantic-release/changelog @semantic-release/commit-analyzer @semantic-release/git @semantic-release/release-notes-generator --save-dev`, cdw, {devNull:true});
@@ -320,6 +325,7 @@ const main = async () => {
     await grapInputParameters();
     createProjectFolder();
     createPackageJSON();
+    await downloadFromGithub();
     await adaptFilesWIthPackageName();
     await setupGitReactTypescript();
     await adaptFilesJSON();

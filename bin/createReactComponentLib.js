@@ -3,7 +3,7 @@
 import fs from 'fs'; 
 import readline from 'readline';
 import exec from 'child_process';
-import msgFunctions from './messageFunctions';
+import msgFunctions from './messageFunctions.js';
 
 const exitProg = () => process.exit(1);
 

@@ -7,7 +7,7 @@ const errMSG = (msg) => {
 }
 
 const waitMSG = (msg) => {
-     console.log("\x1b[5m", "\x1b[34m", " ☕ ☞ ", "\x1b[0m", "\x1b[1m", "\x1b[34m", msg, "\x1b[0m");
+     console.log("\x1b[5m", "\x1b[34m", " ☕ ", "\x1b[1m", "\x1b[34m", msg, "\x1b[0m");
 }
 
 const successJobMSG = (msg, successIcon = "✔") => {

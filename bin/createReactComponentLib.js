@@ -2,7 +2,8 @@
 
 const fs = require('fs');
 const { stderr } = require('process');
-const readline = require('readline');
+// const readline = require('readline');
+import readline from 'readline'
 const packageJSON = require('./templates/toChange/package.json');
 const exec = require('child_process').exec;
 
@@ -329,4 +330,6 @@ const main = async () => {
     process.exit();
 }
 
-main();
+if(require.main === module) {
+    main();
+}

@@ -59,9 +59,12 @@ const grapInputParameters = async () => {
     if (inputParams.projectName === undefined) inputParams.projectName = await msgFunctions.prompt('Enter the project-name: ');
     if (inputParams.author_name === undefined) inputParams.author_name = await msgFunctions.prompt('Enter the author-name: ');
     if (inputParams.author_email === undefined) inputParams.author_email = await msgFunctions.prompt('Enter the author-email: ');
+    inputParams.author_name = inputParams.author_name.toLowerCase();
 
-    if (inputParams.packageName === undefined) inputParams.packageName = `swissglider.${inputParams.projectName.toLowerCase()}`;
-    if (inputParams.projectFolder === undefined) inputParams.projectFolder = inputParams.projectName.replace(/ +/g, '_');
+    if (inputParams.packageName === undefined) inputParams.packageName = `${inputParams.author_name}.${inputParams}`;
+    if (inputParams.projectFolder === undefined) inputParams.projectFolder = inputParams.projectName;
+    inputParams.projectFolder = inputParams.projectFolder.replace(/ +/g, '_');
+    inputParams.packageName = inputParams.packageName.toLowerCase();
 }
 
 
@@ -171,6 +174,7 @@ const adaptFilesJSON = async () => {
         react: reactVersion,
         'react-dom': reactDOMVersion
     }
+    newPackageJSON.homepage = `https://${inputParams.author_name}.github.io/${inputParams.packageName}`
     newPackageJSON.release = {
         "plugins": [
             ["@semantic-release/commit-analyzer", {

@@ -3,7 +3,7 @@
 import fs from 'fs'; 
 import msgFunctions from './messageFunctions.js';
 import execAsync from './asyncExecHandler.js';
-import exitProg from './exitHandler';
+import exitProg from './exitHandler.js';
 
 const inputParams = {
     projectName: undefined,

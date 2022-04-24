@@ -1,3 +1,10 @@
+# [1.42.0](https://github.com/swissglider/swissglider.th-builder/compare/v1.41.0...v1.42.0) (2022-04-24)
+
+
+### Features
+
+* init ([3577aa0](https://github.com/swissglider/swissglider.th-builder/commit/3577aa0013243b1f4e6b860690d45485c3f967ca))
+
 # [1.41.0](https://github.com/swissglider/swissglider.th-builder/compare/v1.40.0...v1.41.0) (2022-04-24)
 
 

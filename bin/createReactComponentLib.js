@@ -257,12 +257,40 @@ const checkIfGithubAuthenticated = async () => {
     rewriteLastLine(' ✔  github authentication ok');
 }
 
+const createLiveStoryBookEnvironmen = async () => {
+
+    const cdw = `./${inputParams.projectFolder}/liveStorybook`;
+
+    waitMSG('createLiveStoryBookEnvironment::adapt own packageJSON');
+    const rawPackageJSON = fs.readFileSync(`./${inputParams.projectFolder}/liveStorybook/package.json`);
+    const newPackageJSON = JSON.parse(rawPackageJSON);
+    if (inputParams.version) newPackageJSON.version = inputParams.version;
+    newPackageJSON.author.name = inputParams.author_name;
+    newPackageJSON.author.email = inputParams.author_email;
+    if (inputParams.license) newPackageJSON.license = inputParams.license;
+    newPackageJSON.homepage = `https://${inputParams.author_name}.github.io/${inputParams.packageName}`
+    fs.writeFileSync(`./${inputParams.projectFolder}/liveStorybook/package.json`, JSON.stringify(newPackageJSON, null, 2));
+    rewriteLastLine(' ✔  createLiveStoryBookEnvironment::adapt own packageJSON');
+
+    waitMSG('createLiveStoryBookEnvironment::install Packages');
+    await execAsync(`npm install react react-dom typescript @types/react --save`, cdw);
+    await execAsync(`npm install webpack --save-dev`, cdw);
+    await execAsync(`npx sb init --builder webpack5`, cdw, {devNull:true});
+    await execAsync(`npx sb upgrade --prerelease`, cdw, {devNull:true});
+    // await execAsync(` rm -rf ./src/stories`, cdw, {devNull:true});
+    // await execAsync(`rm -rf ./node_modules`, cdw, {devNull:true});
+    // await execAsync(`rm -rf ./package-lock.json`, cdw, {devNull:true});
+    // await execAsync(`npm install`, cdw, {devNull:true});
+    rewriteLastLine(' ✔  createLiveStoryBookEnvironment::install Packages');
+
+}
+
 const main = async () => {
     // **************************************
     // Main Program
     // **************************************
     successMSG("====================================================================")
-    successMSG("  Welcome and thanks for using the Swissglider - TheHome - Builder")
+    successMSG("  Welcome and thanks for using Swissglider's - TheHome - Builder")
     successMSG("====================================================================")
     successMSG(``);
     await checkIfGithubAuthenticated();

@@ -1,0 +1,12 @@
+{
+    "name": "livestorybook",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo hallo",
+        "predeploy": "npm run build-storybook",
+        "deploy-storybook": "gh-pages -d storybook-static"
+    },
+    "license": "MIT"
+  }

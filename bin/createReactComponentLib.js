@@ -167,7 +167,7 @@ const adaptFilesWIthPackageName = async () => {
     const cdw = `./${inputParams.projectFolder}`;
 
     waitMSG('change files with new packageName');
-    const command1 = `sed -i "s/\${packageName}/${inputParams.packageName}/" ./.github/workflows/gh-pages.yml`;
+    const command1 = `sed -i "s/\\${packageName}/${inputParams.packageName}/" ./.github/workflows/gh-pages.yml`;
     const command2 = `sed -i "s/\${packageName}/${inputParams.packageName}/" ./liveStorybook/stories_/Default.stories.tsx`;
     console.log(command1);
     console.log(command2);
@@ -175,7 +175,7 @@ const adaptFilesWIthPackageName = async () => {
     console.log(result);
     const result1 = await execAsync(`ls -la`, cdw, {devNull:true});
     console.log(result1);
-    await execAsync(`sed -i "s/\${packageName}/${inputParams.packageName}/" ./.github/workflows/gh-pages.yml`, cdw, {devNull:true});
+    await execAsync(`sed -i "s/\\${packageName}/${inputParams.packageName}/" ./.github/workflows/gh-pages.yml`, cdw, {devNull:true});
     await execAsync(`sed -i "s/\${packageName}/${inputParams.packageName}/" ./liveStorybook/stories_/Default.stories.tsx`, cdw, {devNull:true});
     rewriteLastLine(' ✔  changed files with new packageName');
 }

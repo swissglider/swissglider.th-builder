@@ -334,6 +334,4 @@ const main = async () => {
     process.exit();
 }
 
-if(require.main === module) {
-    main();
-}
+main();

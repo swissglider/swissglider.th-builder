@@ -301,6 +301,7 @@ const main = async () => {
     await adaptPackageJSON();
     await reInstallNPM();
     await createGitHubRepository();
+    await createLiveStoryBookEnvironmen();
     process.exit();
 }
 

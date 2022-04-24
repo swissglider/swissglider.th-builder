@@ -144,13 +144,15 @@ const createPackageJSON = () => {
 
     waitMSG('create package.json ...');
     const rawPackageJSON = fs.readFileSync(`./${inputParams.projectFolder}/package.json`);
-    rawPackageJSON.name = inputParams.packageName.toLowerCase();
-    if (inputParams.version) rawPackageJSON.version = inputParams.version;
-    rawPackageJSON.author.name = inputParams.author_name;
-    rawPackageJSON.author.email = inputParams.author_email;
-    if (inputParams.license) rawPackageJSON.license = inputParams.license;
-    if (inputParams.keywords) rawPackageJSON.keywords = inputParams.keywords;
     const newPackageJSON = JSON.parse(rawPackageJSON);
+    newPackageJSON.name = inputParams.packageName.toLowerCase();
+    if (inputParams.version) newPackageJSON.version = inputParams.version;
+    newPackageJSON.author = {
+        name: inputParams.author_name,
+        email: inputParams.author_email,
+    }
+    if (inputParams.license) newPackageJSON.license = inputParams.license;
+    if (inputParams.keywords) newPackageJSON.keywords = inputParams.keywords;
 
     fs.writeFileSync(`./${inputParams.projectFolder}/package.json`, JSON.stringify(newPackageJSON, null, 2));
     rewriteLastLine(' ✔  npm package.json created');

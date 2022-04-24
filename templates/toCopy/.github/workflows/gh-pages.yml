@@ -10,21 +10,22 @@ jobs:
         steps:
             - name: Deploy to gh pages only when commit starts with ghp
               run: |
-                  echo 'Commit with ghp:'
+                    echo 'Commit with ghp:'
             - uses: actions/checkout@v3
             - name: Setup Node.js
               uses: actions/setup-node@v3
               with:
-                  node-version: '16.x'
-                  cache: 'npm'
+                    node-version: '16.x'
+                    cache: 'npm'
             - name: Install dependencies
               run: |
-                  cd liveStorybook
-                  npm ci
-                  npm install --save £{packageName}
-                  npm run predeploy
+                    cd liveStorybook
+                    npm ci
+                    npm install --save £{packageName}
+                    npm run predeploy
             - name: Deploy 🚀
               uses: JamesIves/github-pages-deploy-action@v4.3.0
               with:
-                  branch: gh-pages
-                  folder: liveStorybook/storybook-static
+                    branch: gh-pages
+                    folder: liveStorybook/storybook-static
+                    clean: true

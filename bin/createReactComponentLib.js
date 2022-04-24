@@ -65,8 +65,6 @@ const grapInputParameters = async () => {
     if (inputParams.projectFolder === undefined) inputParams.projectFolder = inputParams.projectName;
     inputParams.projectFolder = inputParams.projectFolder.replace(/ +/g, '_');
     inputParams.packageName = inputParams.packageName.toLowerCase();
-    console.log(inputParams.packageName );
-    console.log(inputParams.author_name)
 }
 
 
@@ -223,7 +221,7 @@ const createGitHubRepository = async () => {
     msgFunctions.waitMSG('creating github repository ...');
     await execAsync(`git add . && git commit -m "initial commit"`, cdw);
     await execAsync(`gh auth status`, cdw, {devNull:true})
-    await execAsync(`gh repo create ${inputParams.packageName} --public --source=. --remote=origin --description="${inputParams.description}" --push`, cdw)
+    await execAsync(`gh repo create ${inputParams.packageName} --public --source=. --remote=origin --description="${inputParams.description}" --homepage="https://${inputParams.author_name}.github.io/${inputParams.packageName}" --push`, cdw)
     msgFunctions.successJobMSG('github repository created and pushed');
 }
 
@@ -273,10 +271,13 @@ const main = async () => {
     // **************************************
     // Main Program
     // **************************************
+    msgFunctions.stdMSG(``);
+    msgFunctions.stdMSG(``);
     msgFunctions.stdMSG("====================================================================")
     msgFunctions.stdMSG("  Welcome and thanks for using Swissglider's - TheHome - Builder")
     msgFunctions.stdMSG("     😊 😊 Take a coffee, this will tage some minutes 😊 😊")
     msgFunctions.stdMSG("====================================================================")
+    msgFunctions.stdMSG(``);
     msgFunctions.stdMSG(``);
     await checkIfGithubAuthenticated();
     await grapInputParameters();

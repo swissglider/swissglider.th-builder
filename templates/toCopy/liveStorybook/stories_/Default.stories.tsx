@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Title, Subtitle, Description, Primary, ArgsTable, PRIMARY_STORY } from '@storybook/addon-docs';
-import { DefaultAPP } from '${packageName}';
+import { DefaultAPP } from '£{packageName}';
 
 export default {
     title: 'Internal/components/DefaultComponent',

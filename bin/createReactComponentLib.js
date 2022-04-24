@@ -167,8 +167,8 @@ const adaptFilesWIthPackageName = async () => {
     const cdw = `./${inputParams.projectFolder}`;
 
     waitMSG('change files with new packageName');
-    const command1 = `sed -i "s/\\\${packageName}/${inputParams.packageName}/" ./.github/workflows/gh-pages.yml`;
-    const command2 = `sed -i "s/\\\${packageName}/${inputParams.packageName}/" ./liveStorybook/stories_/Default.stories.tsx`;
+    const command1 = `sed -i "s/\\£{packageName}/${inputParams.packageName}/" ./.github/workflows/gh-pages.yml`;
+    const command2 = `sed -i "s/\\£{packageName}/${inputParams.packageName}/" ./liveStorybook/stories_/Default.stories.tsx`;
     console.log(command1);
     console.log(command2);
     const result = await execAsync(`pwd`, cdw, {devNull:true});

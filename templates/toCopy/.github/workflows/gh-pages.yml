@@ -21,7 +21,7 @@ jobs:
               run: |
                   cd liveStorybook
                   npm ci
-                  npm install --save ${packageName}
+                  npm install --save £{packageName}
                   npm run predeploy
             - name: Deploy 🚀
               uses: JamesIves/github-pages-deploy-action@v4.3.0

@@ -60,7 +60,7 @@ const grapInputParameters = async () => {
     if (inputParams.author_name === undefined) inputParams.author_name = await msgFunctions.prompt('Enter the author-name: ');
     if (inputParams.author_email === undefined) inputParams.author_email = await msgFunctions.prompt('Enter the author-email: ');
 
-    if (inputParams.packageName === undefined) inputParams.packageName = `swissglider.${inputParams.projectName}`;
+    if (inputParams.packageName === undefined) inputParams.packageName = `swissglider.${inputParams.projectName.toLowerCase()}`;
     if (inputParams.projectFolder === undefined) inputParams.projectFolder = inputParams.projectName.replace(/ +/g, '_');
 }
 
@@ -90,7 +90,7 @@ const createPackageJSON = () => {
     msgFunctions.waitMSG('create package.json ...');
     const rawPackageJSON = fs.readFileSync(`./${inputParams.projectFolder}/package.json`);
     const newPackageJSON = JSON.parse(rawPackageJSON);
-    newPackageJSON.name = inputParams.packageName.toLowerCase();
+    newPackageJSON.name = inputParams.packageName;
     if (inputParams.version) newPackageJSON.version = inputParams.version;
     newPackageJSON.author = {
         name: inputParams.author_name,

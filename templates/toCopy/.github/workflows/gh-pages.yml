@@ -11,9 +11,20 @@ jobs:
             - name: Deploy to gh pages only when commit starts with ghp
               run: |
                   echo 'Commit with ghp:'
-    test:
-        if: startsWith(github.event.head_commit.message, 'ghp:') === false
-        runs-on: ubuntu-latest
-        steps:
-            - run: |
-                  echo 'Commit without ghp:'
+            - uses: actions/checkout@v3
+            - name: Setup Node.js
+              uses: actions/setup-node@v3
+              with:
+                  node-version: '16.x'
+                  cache: 'npm'
+            - name: Install dependencies
+              run: |
+                  cd liveStorybook
+                  npm ci
+                  npm install --save ${packageName}
+                  npm run predeploy
+            - name: Deploy 🚀
+              uses: JamesIves/github-pages-deploy-action@v4.3.0
+              with:
+                  branch: gh-pages
+                  folder: liveStorybook/storybook-static

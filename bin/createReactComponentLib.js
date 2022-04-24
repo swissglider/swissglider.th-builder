@@ -134,7 +134,7 @@ const createPackageJSON = () => {
     // **************************************
     // create Package.json
     // **************************************
-    packageJSON.name = inputParams.packageName;
+    packageJSON.name = inputParams.packageName.toLowerCase();
     if (inputParams.version) packageJSON.version = inputParams.version;
     packageJSON.author.name = inputParams.author_name;
     packageJSON.author.email = inputParams.author_email;
@@ -185,7 +185,8 @@ const setupGitReactTypescript = async () => {
     rewriteLastLine(' ✔  installed storybook');
 }
 
-const adaptPackageJSON = async () => {
+const adaptFilesJSON = async () => {
+    const cdw = `./${inputParams.projectFolder}`;
     waitMSG('adapting package.json ...');
     const rawPackageJSON = fs.readFileSync(`./${inputParams.projectFolder}/package.json`);
     const newPackageJSON = JSON.parse(rawPackageJSON);
@@ -205,6 +206,7 @@ const adaptPackageJSON = async () => {
                   {"type": "docs", "scope":"README", "release": "patch"},
                   {"type": "refactor", "release": "patch"},
                   {"type": "style", "release": "patch"},
+                  {"type": "feat", "release": "patch"},
                   {"type": "ghp", release:false}, // only github pages generation -> no new release
                 ]
               }],
@@ -224,6 +226,11 @@ const adaptPackageJSON = async () => {
       }
     fs.writeFileSync(`./${inputParams.projectFolder}/package.json`, JSON.stringify(newPackageJSON, null, 2));
     rewriteLastLine(' ✔  npm install successfull');
+
+    waitMSG('change files with new packageName');
+    await execAsync(`sed -i "s/\${packageName}/${inputParams.packageName}/" ./.github/workflows/gh-pages.yml`, cdw, {devNull:true});
+    await execAsync(`sed -i "s/\${packageName}/${inputParams.packageName}/" ./liveStorybook/stories_/Default.stories.tsx`, cdw, {devNull:true});
+    rewriteLastLine(' ✔  changed files with new packageName');
 }
 
 const reInstallNPM = async () => {
@@ -294,7 +301,7 @@ const main = async () => {
     // **************************************
     successMSG("====================================================================")
     successMSG("  Welcome and thanks for using Swissglider's - TheHome - Builder")
-    successMSG("      😊 😊 Take a coffee, this can go some minutes 😊 😊")
+    successMSG("      😊 😊 Take a coffee, this will go some minutes 😊 😊")
     successMSG("====================================================================")
     successMSG(``);
     await checkIfGithubAuthenticated();
@@ -302,11 +309,11 @@ const main = async () => {
     createProjectFolder();
     createPackageJSON();
     await setupGitReactTypescript();
-    await adaptPackageJSON();
+    await adaptFilesJSON();
     await reInstallNPM();
     await createLiveStoryBookEnvironmen();
 
-    
+
     await createGitHubRepository();
     process.exit();
 }

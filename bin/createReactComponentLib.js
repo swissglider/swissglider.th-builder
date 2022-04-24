@@ -1,11 +1,15 @@
 #! /usr/bin/env node
 
-const fs = require('fs');
-const { stderr } = require('process');
+// const fs = require('fs');
+// const { stderr } = require('process');
 // const readline = require('readline');
-import readline from 'readline'
-const packageJSON = require('./templates/toChange/package.json');
-const exec = require('child_process').exec;
+// const packageJSON = require('./templates/toChange/package.json');
+// const exec = require('child_process').exec;
+
+import fs from 'fs'; 
+import readline from 'readline';
+import packageJSON from './templates/toChange/package.json';
+import exec from 'child_process';
 
 // https://stackoverflow.com/questions/9781218/how-to-change-node-jss-console-font-color
 const successMSG = (msg => console.warn("\x1b[1m", "\x1b[32m", msg, "\x1b[0m"));

@@ -65,6 +65,8 @@ const grapInputParameters = async () => {
     if (inputParams.projectFolder === undefined) inputParams.projectFolder = inputParams.projectName;
     inputParams.projectFolder = inputParams.projectFolder.replace(/ +/g, '_');
     inputParams.packageName = inputParams.packageName.toLowerCase();
+    console.log(inputParams.packageName );
+    console.log(inputParams.author_name)
 }
 
 

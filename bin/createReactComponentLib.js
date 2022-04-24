@@ -328,8 +328,10 @@ const main = async () => {
     await checkIfGithubAuthenticated();
     await grapInputParameters();
     createProjectFolder();
-    createPackageJSON();
+
+
     await downloadFromGithub();
+    createPackageJSON();
     await adaptFilesWIthPackageName();
     await setupGitReactTypescript();
     await adaptFilesJSON();

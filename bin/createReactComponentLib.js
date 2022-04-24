@@ -175,8 +175,8 @@ const adaptFilesWIthPackageName = async () => {
     console.log(result);
     const result1 = await execAsync(`ls -la`, cdw, {devNull:true});
     console.log(result1);
-    await execAsync(`sed -i "s/\\${packageName}/${inputParams.packageName}/" ./.github/workflows/gh-pages.yml`, cdw, {devNull:true});
-    await execAsync(`sed -i "s/\${packageName}/${inputParams.packageName}/" ./liveStorybook/stories_/Default.stories.tsx`, cdw, {devNull:true});
+    await execAsync(`sed -i "s/\\£{{packageName}/${inputParams.packageName}/" ./.github/workflows/gh-pages.yml`, cdw, {devNull:true});
+    await execAsync(`sed -i "s/\\£{packageName}/${inputParams.packageName}/" ./liveStorybook/stories_/Default.stories.tsx`, cdw, {devNull:true});
     rewriteLastLine(' ✔  changed files with new packageName');
 }
 

@@ -1,6 +1,6 @@
 import exec from 'child_process';
 import msgFunctions from './messageFunctions.js';
-import exitProg from './exitHandler';
+import exitProg from './exitHandler.js';
 
 const checkResponseError = ({error, stdout, stderr}, {devNull = false, getSTDERR = false, ignoreError=false}) => {
     if (error && !ignoreError) {

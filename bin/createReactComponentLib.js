@@ -9,7 +9,7 @@
 import fs from 'fs'; 
 import readline from 'readline';
 // import packageJSON from './templates/toChange/package.json';
-const packageJSON = require('./templates/toChange/package.json');
+// const packageJSON = require('./templates/toChange/package.json');
 import exec from 'child_process';
 
 // https://stackoverflow.com/questions/9781218/how-to-change-node-jss-console-font-color
@@ -140,15 +140,21 @@ const createPackageJSON = () => {
     // **************************************
     // create Package.json
     // **************************************
-    packageJSON.name = inputParams.packageName.toLowerCase();
-    if (inputParams.version) packageJSON.version = inputParams.version;
-    packageJSON.author.name = inputParams.author_name;
-    packageJSON.author.email = inputParams.author_email;
-    if (inputParams.license) packageJSON.license = inputParams.license;
-    if (inputParams.keywords) packageJSON.keywords = inputParams.keywords;
 
-    // console.log(JSON.stringify(packageJSON, null, 2));
-    fs.writeFileSync(`./${inputParams.projectFolder}/package.json`, JSON.stringify(packageJSON, null, 2))
+
+    waitMSG('create package.json ...');
+    const rawPackageJSON = fs.readFileSync(`./${inputParams.projectFolder}/package.json`);
+    rawPackageJSON.name = inputParams.packageName.toLowerCase();
+    if (inputParams.version) rawPackageJSON.version = inputParams.version;
+    rawPackageJSON.author.name = inputParams.author_name;
+    rawPackageJSON.author.email = inputParams.author_email;
+    if (inputParams.license) rawPackageJSON.license = inputParams.license;
+    if (inputParams.keywords) rawPackageJSON.keywords = inputParams.keywords;
+    const newPackageJSON = JSON.parse(rawPackageJSON);
+
+    fs.writeFileSync(`./${inputParams.projectFolder}/package.json`, JSON.stringify(newPackageJSON, null, 2));
+    rewriteLastLine(' ✔  npm package.json created');
+
 }
 
 const downloadFromGithub = async () => {

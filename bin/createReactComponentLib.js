@@ -56,7 +56,7 @@ const checkResponseError = ({error, stdout, stderr}, {devNull = false, getSTDERR
  */
 const execAsync = async (command, workingDir = './', params={}) => {
     return new Promise((resolve, reject) => {
-        exec(command, { cwd: workingDir }, (error, stdout, stderr) => resolve(checkResponseError({error, stdout, stderr}, params)))
+        exec.exec(command, { cwd: workingDir }, (error, stdout, stderr) => resolve(checkResponseError({error, stdout, stderr}, params)))
     })
 }
 

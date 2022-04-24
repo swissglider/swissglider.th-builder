@@ -305,7 +305,7 @@ const main = async () => {
     // **************************************
     msgFunctions.stdMSG("====================================================================")
     msgFunctions.stdMSG("  Welcome and thanks for using Swissglider's - TheHome - Builder")
-    msgFunctions.stdMSG("      😊 😊 Take a coffee, this will go some minutes 😊 😊")
+    msgFunctions.stdMSG("     😊 😊 Take a coffee, this will tage some minutes 😊 😊")
     msgFunctions.stdMSG("====================================================================")
     msgFunctions.stdMSG(``);
     await checkIfGithubAuthenticated();

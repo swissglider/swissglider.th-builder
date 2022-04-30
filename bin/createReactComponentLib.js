@@ -190,8 +190,8 @@ const setupGitReactTypescript = async () => {
     msgFunctions.successJobMSG('installed storybook');
 
     msgFunctions.waitMSG('installing tailwind ...');
-    await execAsync(`npm i -D @storybook/addon-postcss`, cdw, {devNull:true});
-    await execAsync(`npm i -D tailwindcss postcss autoprefixer`, cdw, {devNull:true});
+    await execAsync(`npm i -D @storybook/addon-postcss --force`, cdw, {devNull:true});
+    await execAsync(`npm i -D tailwindcss postcss autoprefixer --force`, cdw, {devNull:true});
     msgFunctions.successJobMSG('installed tailwind');
 
     msgFunctions.waitMSG('installing fontawesome ...');
@@ -273,8 +273,8 @@ const createLiveStoryBookEnvironmen = async () => {
     await execAsync(`rm -rf ./node_modules`, cdw, {devNull:true});
     await execAsync(`rm -rf ./package-lock.json`, cdw, {devNull:true});
     await execAsync(`npm install`, cdw, {devNull:true});
-    await execAsync(`npm i -D @storybook/addon-postcss`, cdw, {devNull:true});
-    await execAsync(`npm i -D tailwindcss postcss autoprefixer`, cdw, {devNull:true});
+    await execAsync(`npm i -D @storybook/addon-postcss --force`, cdw, {devNull:true});
+    await execAsync(`npm i -D tailwindcss postcss autoprefixer --force`, cdw, {devNull:true});
     msgFunctions.successJobMSG('createLiveStoryBookEnvironment::install Packages');
 
 }

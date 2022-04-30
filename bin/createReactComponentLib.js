@@ -188,6 +188,15 @@ const setupGitReactTypescript = async () => {
     await execAsync(`npx sb upgrade --prerelease`, cdw, {devNull:true});
     await execAsync(` rm -rf ./src/stories`, cdw, {devNull:true});
     msgFunctions.successJobMSG('installed storybook');
+
+    msgFunctions.waitMSG('installing tailwind ...');
+    await execAsync(`npm i -D @storybook/addon-postcss`, cdw, {devNull:true});
+    await execAsync(`npm i -D tailwindcss postcss autoprefixer`, cdw, {devNull:true});
+    msgFunctions.successJobMSG('installed tailwind');
+
+    msgFunctions.waitMSG('installing fontawesome ...');
+    await execAsync(`npm i @fortawesome/free-brands-svg-icons @fortawesome/free-solid-svg-icons @fortawesome/react-fontawesome`, cdw, {devNull:true});
+    msgFunctions.successJobMSG('installed fontawesome');
 }
 
 const createPeerDependencies = () => {
@@ -264,6 +273,8 @@ const createLiveStoryBookEnvironmen = async () => {
     await execAsync(`rm -rf ./node_modules`, cdw, {devNull:true});
     await execAsync(`rm -rf ./package-lock.json`, cdw, {devNull:true});
     await execAsync(`npm install`, cdw, {devNull:true});
+    await execAsync(`npm i -D @storybook/addon-postcss`, cdw, {devNull:true});
+    await execAsync(`npm i -D tailwindcss postcss autoprefixer`, cdw, {devNull:true});
     msgFunctions.successJobMSG('createLiveStoryBookEnvironment::install Packages');
 
 }

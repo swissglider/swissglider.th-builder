@@ -1,4 +1,5 @@
 import React, { FC, useEffect } from 'react';
+import Button from '../../1-atoms/Buton';
 import { useDefaultHooks } from '../../10-addons/hooks/useDefaultHook';
 
 const DefaultComponent: FC<any> = () => {
@@ -9,7 +10,7 @@ const DefaultComponent: FC<any> = () => {
     }, []);
     return (
         <div>
-            <button>Hallo Guido</button>
+            <Button>Hallo Guido</Button>
         </div>
     );
 };

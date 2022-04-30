@@ -1,6 +1,6 @@
 # Swissglider TheHome Builder
 
-The Swissglider TheHome Builder is building the whole framework with React, TypeScript, Rollup, Storybook, NPM Package, semantic-release, GitHub
+The Swissglider TheHome Builder is building the whole framework with React, TypeScript, Rollup, Storybook, NPM Package, semantic-release, GitHub, TailwindCSS
 
 **creates:**
 - new folder with the Project
@@ -82,10 +82,13 @@ the following points are not done automatically:
 - semantic-release
     > use to autocreate new version on the package.json
 
+- TailwindCSS
+
 ## ToDo
 - create Readme.md
 - create help menu
 - flag without publish to npm
 - flag without publish gh-pages
 - flag without liveStorybook
+- flag without Tailwind
 - refactor seed that is also running on macOS

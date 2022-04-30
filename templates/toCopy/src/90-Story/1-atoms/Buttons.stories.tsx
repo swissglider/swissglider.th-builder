@@ -1,9 +1,11 @@
 import React, { useEffect } from 'react';
 import { Title, Subtitle, Description, Primary, ArgsTable, PRIMARY_STORY } from '@storybook/addon-docs';
-import { DefaultAPP } from '../..';
+import Button from '../../1-atoms/Buton';
+
+import '../index.css';
 
 export default {
-    title: 'Internal/components/DefaultComponent',
+    title: 'Internal/1-Atoms/Button',
     argTypes: {},
     args: {},
     parameters: {
@@ -29,9 +31,13 @@ export default {
 
 const DefaultComponentTemplate: any = () => {
     return (
-        <>
-            <DefaultAPP.Components.DefaultComponent />
-        </>
+        <div className="flex flex-wrap">
+            <div className="w-full p-3 md:w-1/2 xl:w-1/3 2xl:w-1/4">
+                <Button />
+                <Button />
+                <Button />
+            </div>
+        </div>
     );
 };
 

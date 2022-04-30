@@ -101,6 +101,33 @@ const createPackageJSON = () => {
     }
     if (inputParams.license) newPackageJSON.license = inputParams.license;
     if (inputParams.keywords) newPackageJSON.keywords = inputParams.keywords;
+    newPackageJSON.homepage = `https://${inputParams.author_name}.github.io/${inputParams.packageName}`
+    newPackageJSON.release = {
+        "plugins": [
+            ["@semantic-release/commit-analyzer", {
+                "preset": "angular",
+                "releaseRules": [
+                  {"type": "docs", "scope":"README", "release": "patch"},
+                  {"type": "refactor", "release": "patch"},
+                  {"type": "style", "release": "patch"},
+                  {"type": "feat", "release": "patch"},
+                  {"type": "ghp", release:false}, // only github pages generation -> no new release
+                ]
+              }],
+          "@semantic-release/release-notes-generator",
+          [
+            "@semantic-release/npm",
+            {
+              "npmPublish": true
+            }
+          ],
+          "@semantic-release/changelog",
+          "@semantic-release/git"
+        ],
+        "branches": [
+          inputParams.branch
+        ]
+      }
 
     fs.writeFileSync(`./${inputParams.projectFolder}/package.json`, JSON.stringify(newPackageJSON, null, 2));
     msgFunctions.successJobMSG('npm package.json created');
@@ -118,7 +145,7 @@ const downloadFromGithub = async () => {
     const tmpF = '__temp__';
     await execAsync(`mkdir ${tmpF}`, cdw);
     await execAsync(`git clone --depth 1 --filter=blob:none --no-checkout https://github.com/swissglider/swissglider.th-builder`, `${cdw}/${tmpF}`, {devNull:true});
-    await execAsync(`git checkout --quiet main -- templates`, `${cdw}/${tmpF}/swissglider.th-builder`);
+    await execAsync(`git checkout --quiet ${inputParams.branch} -- templates`, `${cdw}/${tmpF}/swissglider.th-builder`);
     await execAsync(` cp -rT ./${tmpF}/swissglider.th-builder/templates/toCopy .`, cdw);
     await execAsync(` rm -rf ./${tmpF}`, cdw);
     msgFunctions.successJobMSG('copy config from Github');
@@ -131,6 +158,8 @@ const adaptFilesWithPackageName = async () => {
     msgFunctions.waitMSG('change files with new packageName');
     await execAsync(`sed -i "s/\\£{packageName}/${inputParams.packageName}/" ./.github/workflows/gh-pages.yml`, cdw, {devNull:true});
     await execAsync(`sed -i "s/\\£{packageName}/${inputParams.packageName}/" ./liveStorybook/stories_/Default.stories.tsx`, cdw, {devNull:true});
+    await execAsync(`sed -i "s/\\£{author_name}/${inputParams.author_name}/" ./LICENSE`, cdw, {devNull:true});
+    await execAsync(`sed -i "s/\\£{author_email}/${inputParams.author_email}/" ./LICENSE`, cdw, {devNull:true});
     msgFunctions.successJobMSG('changed files with new packageName');
 }
 
@@ -161,9 +190,8 @@ const setupGitReactTypescript = async () => {
     msgFunctions.successJobMSG('installed storybook');
 }
 
-const adaptFilesJSON = async () => {
-    const cdw = `./${inputParams.projectFolder}`;
-    msgFunctions.waitMSG('adapting package.json ...');
+const createPeerDependencies = () => {
+    msgFunctions.waitMSG('create peeDependencies on package.json ...');
     const rawPackageJSON = fs.readFileSync(`./${inputParams.projectFolder}/package.json`);
     const newPackageJSON = JSON.parse(rawPackageJSON);
     const reactVersion = newPackageJSON.devDependencies.react;
@@ -174,35 +202,8 @@ const adaptFilesJSON = async () => {
         react: reactVersion,
         'react-dom': reactDOMVersion
     }
-    newPackageJSON.homepage = `https://${inputParams.author_name}.github.io/${inputParams.packageName}`
-    newPackageJSON.release = {
-        "plugins": [
-            ["@semantic-release/commit-analyzer", {
-                "preset": "angular",
-                "releaseRules": [
-                  {"type": "docs", "scope":"README", "release": "patch"},
-                  {"type": "refactor", "release": "patch"},
-                  {"type": "style", "release": "patch"},
-                  {"type": "feat", "release": "patch"},
-                  {"type": "ghp", release:false}, // only github pages generation -> no new release
-                ]
-              }],
-          "@semantic-release/release-notes-generator",
-          [
-            "@semantic-release/npm",
-            {
-              "npmPublish": true
-            }
-          ],
-          "@semantic-release/changelog",
-          "@semantic-release/git"
-        ],
-        "branches": [
-          "main"
-        ]
-      }
     fs.writeFileSync(`./${inputParams.projectFolder}/package.json`, JSON.stringify(newPackageJSON, null, 2));
-    msgFunctions.successJobMSG('npm install successfull');
+    msgFunctions.successJobMSG('peeDependencies created');
 }
 
 const reInstallNPM = async () => {
@@ -288,7 +289,7 @@ const main = async () => {
     createPackageJSON();
     await adaptFilesWithPackageName();
     await setupGitReactTypescript();
-    await adaptFilesJSON();
+    createPeerDependencies();
     await reInstallNPM();
     await createLiveStoryBookEnvironmen();
 

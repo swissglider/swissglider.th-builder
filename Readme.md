@@ -83,6 +83,15 @@ the following points are not done automatically:
     > use to autocreate new version on the package.json
 
 - TailwindCSS
+  
+## publish
+| Type     | Release | remark |
+|----------|---------|--------------|
+| docs     | patch   |              |
+| refactor | patch   |              |
+| style    | patch   |              |
+| feat     | patch   |              |
+| ghp      | false   | github Pages |
 
 ## ToDo
 - create Readme.md

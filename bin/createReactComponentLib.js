@@ -184,8 +184,8 @@ const setupGitReactTypescript = async () => {
     msgFunctions.successJobMSG('installed semantic-release');
 
     msgFunctions.waitMSG('installing tailwind ...');
-    await execAsync(`npm i -D @storybook/addon-postcss`, cdw, {devNull:true});
     await execAsync(`npm i -D tailwindcss postcss autoprefixer`, cdw, {devNull:true});
+    await execAsync(`npm i -D @storybook/addon-postcss`, cdw, {devNull:true});
     msgFunctions.successJobMSG('installed tailwind');
 
     msgFunctions.waitMSG('installing fontawesome ...');
@@ -266,8 +266,8 @@ const createLiveStoryBookEnvironmen = async () => {
     msgFunctions.waitMSG('createLiveStoryBookEnvironment::install Packages');
     await execAsync(`npm install react react-dom typescript @types/react --save`, cdw);
     await execAsync(`npm install webpack --save-dev`, cdw);
-    await execAsync(`npm i -D @storybook/addon-postcss`, cdw, {devNull:true});
     await execAsync(`npm i -D tailwindcss postcss autoprefixer`, cdw, {devNull:true});
+    await execAsync(`npm i -D @storybook/addon-postcss`, cdw, {devNull:true});
     await execAsync(`npx sb init --builder webpack5`, cdw, {devNull:true});
     await execAsync(`npx sb upgrade --prerelease`, cdw, {devNull:true});
     await execAsync(` rm -rf ./stories`, cdw, {devNull:true});

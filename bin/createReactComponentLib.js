@@ -196,6 +196,8 @@ const setupGitReactTypescript = async () => {
     await execAsync(`npx sb init --builder webpack5`, cdw, {devNull:true});
     await execAsync(`npx sb upgrade --prerelease`, cdw, {devNull:true});
     await execAsync(` rm -rf ./src/stories`, cdw, {devNull:true});
+    await execAsync(` rm -rf ./.storybook`, cdw, {devNull:true});
+    await execAsync(` mv ./.storybook_ ./.storybook`, cdw, {devNull:true});
     msgFunctions.successJobMSG('installed storybook');
 }
 
@@ -272,6 +274,8 @@ const createLiveStoryBookEnvironmen = async () => {
     await execAsync(`npx sb upgrade --prerelease`, cdw, {devNull:true});
     await execAsync(` rm -rf ./stories`, cdw, {devNull:true});
     await execAsync(` mv ./stories_ ./stories`, cdw, {devNull:true});
+    await execAsync(` rm -rf ./.storybook`, cdw, {devNull:true});
+    await execAsync(` mv ./.storybook_ ./.storybook`, cdw, {devNull:true});
     await execAsync(`rm -rf ./node_modules`, cdw, {devNull:true});
     await execAsync(`rm -rf ./package-lock.json`, cdw, {devNull:true});
     await execAsync(`npm install`, cdw, {devNull:true});

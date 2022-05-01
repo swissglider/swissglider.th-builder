@@ -101,3 +101,10 @@ the following points are not done automatically:
 - flag without liveStorybook
 - flag without Tailwind
 - refactor seed that is also running on macOS
+
+## Error-Handling
+### EGITNOPERMISSION - GITHUB_TOKEN
+
+Change Workflow Permission on Repository Level
+- [Setting the permissions of the GITHUB_TOKEN for your repository](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository#setting-the-permissions-of-the-github_token-for-your-repository)
+- [Automatic token authentication](https://docs.github.com/en/actions/security-guides/automatic-token-authentication#permissions-for-the-github_token)

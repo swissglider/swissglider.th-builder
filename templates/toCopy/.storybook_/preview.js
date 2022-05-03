@@ -1,4 +1,4 @@
-import '../src/90-Story/index.css';
+import '../src/index.css';
 
 export const parameters = {
     actions: { argTypesRegex: '^on[A-Z].*' },

@@ -6,6 +6,7 @@ import json from '@rollup/plugin-json';
 import postcss from 'rollup-plugin-postcss';
 import { terser } from 'rollup-plugin-terser';
 import peerDepsExternal from 'rollup-plugin-peer-deps-external';
+import { babel } from '@rollup/plugin-babel';
 
 const packageJson = require('./package.json');
 
@@ -31,6 +32,10 @@ export default [
             json(),
             postcss(),
             typescript({ tsconfig: './tsconfig.json', sourceMap: true, inlineSources: true }),
+            babel({
+                babelHelpers: 'bundled',
+                exclude: 'node_modules/**',
+            }),
             terser(),
         ],
     },

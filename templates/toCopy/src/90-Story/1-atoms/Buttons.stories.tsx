@@ -2,8 +2,6 @@ import React, { useEffect } from 'react';
 import { Title, Subtitle, Description, Primary, ArgsTable, PRIMARY_STORY } from '@storybook/addon-docs';
 import Button from '../../1-atoms/Buton';
 
-import '../index.css';
-
 export default {
     title: 'Internal/1-Atoms/Button',
     argTypes: {},

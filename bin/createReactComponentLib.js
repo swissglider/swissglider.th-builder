@@ -157,7 +157,7 @@ const adaptFilesWithPackageName = async () => {
 
     msgFunctions.waitMSG('change files with new packageName');
     await execAsync(`sed -i "s/\\£{packageName}/${inputParams.packageName}/" ./.github/workflows/gh-pages.yml`, cdw, {devNull:true});
-    await execAsync(`sed -i "s/\\£{packageName}/${inputParams.packageName}/" ./liveStorybook/stories_/Default.stories.tsx`, cdw, {devNull:true});
+    await execAsync(`sed -i "s/\\£{packageName}/${inputParams.packageName}/" ./liveStorybook/src/stories_/Default.stories.tsx`, cdw, {devNull:true});
     await execAsync(`sed -i "s/\\£{author_name}/${inputParams.author_name}/" ./LICENSE`, cdw, {devNull:true});
     await execAsync(`sed -i "s/\\£{author_email}/${inputParams.author_email}/" ./LICENSE`, cdw, {devNull:true});
     msgFunctions.successJobMSG('changed files with new packageName');
@@ -176,7 +176,8 @@ const setupGitReactTypescript = async () => {
 
     msgFunctions.waitMSG('installing Rollup ...');
     await execAsync(`npm install rollup @rollup/plugin-node-resolve @rollup/plugin-typescript @rollup/plugin-commonjs --save-dev`, cdw);
-    await execAsync(`npm install rollup-plugin-dts @rollup/plugin-json rollup-plugin-postcss rollup-plugin-peer-deps-external rollup-plugin-terser --save-dev`, cdw);
+    await execAsync(`npm install rollup-plugin-dts @rollup/plugin-json rollup-plugin-postcss rollup-plugin-peer-deps-external rollup-plugin-terser @rollup/plugin-babel --save-dev`, cdw);
+    await execAsync(`npm install @babel/preset-env --save-dev`, cdw);
     msgFunctions.successJobMSG('installed Rollup');
 
     msgFunctions.waitMSG('installing semantic-release ...');
@@ -273,7 +274,7 @@ const createLiveStoryBookEnvironmen = async () => {
     await execAsync(`npx sb init --builder webpack5`, cdw, {devNull:true});
     await execAsync(`npx sb upgrade --prerelease`, cdw, {devNull:true});
     await execAsync(` rm -rf ./stories`, cdw, {devNull:true});
-    await execAsync(` mv ./stories_ ./stories`, cdw, {devNull:true});
+    await execAsync(` mv ./src/stories_ ./src/stories`, cdw, {devNull:true});
     await execAsync(` rm -rf ./.storybook`, cdw, {devNull:true});
     await execAsync(` mv ./.storybook_ ./.storybook`, cdw, {devNull:true});
     await execAsync(`rm -rf ./node_modules`, cdw, {devNull:true});

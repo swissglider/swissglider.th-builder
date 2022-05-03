@@ -249,7 +249,7 @@ const checkIfGithubAuthenticated = async () => {
     msgFunctions.successJobMSG('github authentication ok');
 }
 
-const createLiveStoryBookEnvironmen = async () => {
+const createLiveStoryBookEnvironment = async () => {
 
     const cdw = `./${inputParams.projectFolder}/liveStorybook`;
 
@@ -269,11 +269,9 @@ const createLiveStoryBookEnvironmen = async () => {
     msgFunctions.waitMSG('createLiveStoryBookEnvironment::install Packages');
     await execAsync(`npm install react react-dom typescript @types/react --save`, cdw);
     await execAsync(`npm install webpack --save-dev`, cdw);
-    await execAsync(`npm i -D tailwindcss postcss autoprefixer`, cdw, {devNull:true});
-    await execAsync(`npm i -D @storybook/addon-postcss`, cdw, {devNull:true});
     await execAsync(`npx sb init --builder webpack5`, cdw, {devNull:true});
     await execAsync(`npx sb upgrade --prerelease`, cdw, {devNull:true});
-    await execAsync(` rm -rf ./stories`, cdw, {devNull:true});
+    await execAsync(` rm -rf ./src/stories`, cdw, {devNull:true});
     await execAsync(` mv ./src/stories_ ./src/stories`, cdw, {devNull:true});
     await execAsync(` rm -rf ./.storybook`, cdw, {devNull:true});
     await execAsync(` mv ./.storybook_ ./.storybook`, cdw, {devNull:true});
@@ -307,7 +305,7 @@ const main = async () => {
     await setupGitReactTypescript();
     createPeerDependencies();
     await reInstallNPM();
-    await createLiveStoryBookEnvironmen();
+    await createLiveStoryBookEnvironment();
 
 
     await createGitHubRepository();

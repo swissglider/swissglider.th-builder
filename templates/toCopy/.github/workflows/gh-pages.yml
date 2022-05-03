@@ -6,7 +6,7 @@ on:
             - completed
 jobs:
     deploy_gh_pages:
-        if: contains(github.event.head_commit.message, 'ghp:') || contains(github.event.head_commit.message, 'initial commit')
+        if: contains(github.event.workflow_run.head_commit.message, 'ghp:') || contains(github.event.workflow_run.head_commit.message, 'initial commit')
         runs-on: ubuntu-latest
         steps:
             - name: Deploy to gh pages only when commit starts with ghp
